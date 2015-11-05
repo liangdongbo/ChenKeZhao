@@ -56,7 +56,7 @@ public class GoActivity extends AppCompatActivity{
     private static int count = 0;//操作次数
     private static TextView app_go_score;//获取分数记录控件
     private static TextView app_go_count;//获取操作次数控件
-    private static int setTimeOut = 3;//设置超时时间，单位秒(S)
+    private static int setTimeOut = 5;//设置超时时间，单位秒(S)
     private static int timeOut = 0;
     private static TextView app_go_timeOut;//获取超时显示控件
     //提醒任务
@@ -68,7 +68,7 @@ public class GoActivity extends AppCompatActivity{
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case TIMEOUT:
-                    Toast.makeText(GoActivity.this, "NoNoNo,＠︿＠,TimeOut", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoActivity.this, "NoNoNo,＠︿＠,TimeOut 5 S", Toast.LENGTH_SHORT).show();
                     timeOut++;
                     break;
                 default:
@@ -94,7 +94,7 @@ public class GoActivity extends AppCompatActivity{
             myHandler.sendMessage(message);
             timer.cancel(); //Terminate the timer thread
         }
-        
+
     }
 
     /**
