@@ -2,8 +2,9 @@ package com.ckz.thought.app;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,13 +16,13 @@ import com.ckz.thought.R;
 import com.ckz.thought.service.LocalhostMusicService;
 import com.ckz.thought.utils.BitmapUtils;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by kaiser on 2015/10/26.
@@ -51,11 +52,69 @@ public class GoActivity extends AppCompatActivity{
     //private static int resultLength=5;//保存记录结果的最大长度
     private static TextView recordInput;//记录输入的结果
     private static TextView tvShowHelp;//显示结果帮助
+    private static int score =0;//分数记录
+    private static int count = 0;//操作次数
+    private static TextView app_go_score;//获取分数记录控件
+    private static TextView app_go_count;//获取操作次数控件
+    private static int setTimeOut = 3;//设置超时时间，单位秒(S)
+    private static int timeOut = 0;
+    private static TextView app_go_timeOut;//获取超时显示控件
+    //提醒任务
+    private static Timer timer;
+    private static final int TIMEOUT =1;
 
+    //消息处理机制
+    private final Handler myHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case TIMEOUT:
+                    Toast.makeText(GoActivity.this, "NoNoNo,＠︿＠,TimeOut", Toast.LENGTH_SHORT).show();
+                    timeOut++;
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     public  GoActivity(){
         super();
     }
+
+
+    /**
+     * 提醒任务
+     */
+    class RemindTask extends TimerTask{
+        @Override
+        public void run() {
+            //do something when time's up
+            Message message = new Message();
+            message.what = TIMEOUT;
+            myHandler.sendMessage(message);
+            timer.cancel(); //Terminate the timer thread
+        }
+        
+    }
+
+    /**
+     * 设置计时
+     * @param seconds
+     */
+    public void setTimeout(int seconds) {
+        timer = new Timer();
+        timer.schedule(new RemindTask(), seconds*1000);
+
+    }
+
+    /**
+     * 取消计时器任务
+     */
+    public void clearTimeout(){
+        timer.cancel();
+        timer.purge();
+    }
+
 
     /**
      * 监听按钮的单击事件
@@ -98,16 +157,21 @@ public class GoActivity extends AppCompatActivity{
                         tvFormula.setBackground(null);
                         break;
                     case R.id.tvShowHelp ://显示结果帮助事件
+                        //?背景音乐
+                        LocalhostMusicService.doStart(GoActivity.this, R.raw.question, false);
                         String tempResult = String.valueOf(result);
                         if(tempResult.length()>2){
                             tempResult = "...";
                         }
                         tvShowHelp.setText(tempResult);
                         tvShowHelp.setBackground(null);
-                        //?背景音乐
-                        LocalhostMusicService.doStart(GoActivity.this, R.raw.question, false);
+                        Toast.makeText(GoActivity.this, "◎＿◎，你想干嘛", Toast.LENGTH_SHORT).show();
                         break;
                     default://九宫格按钮事件
+
+                        //时间器-开始计时
+                        setTimeout(setTimeOut);
+
                         //背景音乐
                         LocalhostMusicService.doStart(GoActivity.this,R.raw.btn_click,false);
                         int id = v.getId();
@@ -140,7 +204,7 @@ public class GoActivity extends AppCompatActivity{
                                 String resultStr = "";
                                 for(int r=0;r<result_l;r++){
                                     resultStr+=btnClickResult.get(r);
-                                    recordInput.setText("输入记录："+resultStr);
+                                    recordInput.setText("历史记录："+resultStr);
                                 }
                                 boolean rFlag = false;//是否洗牌标记
                                 String message ="";
@@ -149,13 +213,17 @@ public class GoActivity extends AppCompatActivity{
                                     LocalhostMusicService.doStart(GoActivity.this,R.raw.game_yes,false);
                                     //答案与结果一致
                                     rFlag = true;
-                                    message = "Good，不错不错。";
+                                    message = "Very Good，←︿←";
+                                    score++;//加一分
+                                    count++;//记录操作次数
                                 }else if(result_l>String.valueOf(result).length() || Integer.parseInt(resultStr)>result){
                                     //game over背景音乐
                                     LocalhostMusicService.doStart(GoActivity.this,R.raw.game_over,false);
                                     //答案不一致，并记录值超出正确结果长度
                                     rFlag = true;
-                                    message = "答案错误，且结果记录值已经大于正确结果值！";
+                                    message = "呵呵，↓◎＿◎↓，＞正确结果";
+                                    score--;//减一分
+                                    count++;//记录操作次数
                                 }
                                 if(rFlag){
                                     Toast.makeText(GoActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -170,6 +238,10 @@ public class GoActivity extends AppCompatActivity{
                                     //清空帮助
                                     tvShowHelp.setText("");
                                     tvShowHelp.setBackground(getResources().getDrawable(R.drawable.question));
+                                    //显示记录数据
+                                    app_go_count.setText("次数："+count);
+                                    app_go_score.setText("分数："+score);
+                                    app_go_timeOut.setText("超时："+timeOut+" 次");
                                 }
                                 break;
                             }
@@ -202,10 +274,18 @@ public class GoActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_go);
+
         //背景音乐
         LocalhostMusicService.doStart(GoActivity.this, R.raw.back_go_start, false);
 
         //初始化资源
+        app_go_score = (TextView) findViewById(R.id.app_go_score);
+        app_go_count = (TextView) findViewById(R.id.app_go_count);
+        app_go_timeOut = (TextView) findViewById(R.id.app_go_timeOut);
+        //显示记录数据
+        app_go_count.setText("次数："+count);
+        app_go_score.setText("分数："+score);
+        app_go_timeOut.setText("超时："+timeOut+" 次");
         tvShowHelp = (TextView) findViewById(R.id.tvShowHelp);
         recordInput = (TextView) findViewById(R.id.recordInput);
         imageView = (ImageView) findViewById(R.id.textNumber);
