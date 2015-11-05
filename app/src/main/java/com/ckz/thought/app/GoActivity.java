@@ -84,7 +84,7 @@ public class GoActivity extends AppCompatActivity{
     }
 
     /**
-     * 九宫格按钮的监听按下和弹起事件
+     * 按钮的监听按下和弹起事件
      */
     private class MyBtnTouchListener implements View.OnTouchListener{
 
@@ -150,12 +150,12 @@ public class GoActivity extends AppCompatActivity{
                                     //答案与结果一致
                                     rFlag = true;
                                     message = "Good，不错不错。";
-                                }else if(result_l>String.valueOf(result).length()){
+                                }else if(result_l>String.valueOf(result).length() || Integer.parseInt(resultStr)>result){
                                     //game over背景音乐
                                     LocalhostMusicService.doStart(GoActivity.this,R.raw.game_over,false);
                                     //答案不一致，并记录值超出正确结果长度
                                     rFlag = true;
-                                    message = "答案错误，且结果记录值长度已经超出正确结果长度！";
+                                    message = "答案错误，且结果记录值已经大于正确结果值！";
                                 }
                                 if(rFlag){
                                     Toast.makeText(GoActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -169,7 +169,7 @@ public class GoActivity extends AppCompatActivity{
                                     recordInput.setText("");
                                     //清空帮助
                                     tvShowHelp.setText("");
-                                    tvShowHelp.setBackground(getResources().getDrawable(android.R.drawable.ic_menu_help));
+                                    tvShowHelp.setBackground(getResources().getDrawable(R.drawable.question));
                                 }
                                 break;
                             }
@@ -183,11 +183,11 @@ public class GoActivity extends AppCompatActivity{
                     case R.id.tvFormula://显示公式文本框事件
                         tvFormula.setBackground(getResources().getDrawable(R.drawable.tv_dialog));
                         tvShowHelp.setText("");
-                        tvShowHelp.setBackground(getResources().getDrawable(android.R.drawable.ic_menu_help));
+                        tvShowHelp.setBackground(getResources().getDrawable(R.drawable.question));
                         break;
                     case R.id.tvShowHelp://显示结果帮助事件
                         tvShowHelp.setText("");
-                        tvShowHelp.setBackground(getResources().getDrawable(android.R.drawable.ic_menu_help));
+                        tvShowHelp.setBackground(getResources().getDrawable(R.drawable.question));
                         break;
                     default://九宫格按钮事件
                         btn.setBackground(getResources().getDrawable(drawId[temp][1]));
@@ -262,11 +262,10 @@ public class GoActivity extends AppCompatActivity{
                 {0,getResources().getColor(R.color.btn_go_zero)}*/
         };
 
-
         //注册公式文本框事件
         tvFormula.setOnClickListener(new MyBtnClickListener());
         tvFormula.setOnTouchListener(new MyBtnTouchListener());
-        //帮助help事件注册
+        //帮助help事件注册，XML添加android:clickable="true"
         tvShowHelp.setOnTouchListener(new MyBtnTouchListener());
 
 

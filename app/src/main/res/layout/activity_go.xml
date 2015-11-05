@@ -17,21 +17,22 @@
             android:textColor="@color/app_text_tip"
             android:textSize="50sp"
             android:gravity="center"/>
-        <TextView
+        <ImageView
             style="@style/AudioFileInfoOverlayText"
             android:layout_width="wrap_content"
             android:layout_height="70dp"
-            android:textSize="40dp"
             android:textColor="@color/abc_input_method_navigation_guard"
             android:gravity="bottom"
-            android:text="@string/app_go_equal"/>
+            android:background="@drawable/equal"
+            />
         <TextView
             android:id="@+id/tvShowHelp"
             android:layout_width="80dp"
+            android:clickable="true"
             android:layout_height="70dp"
             android:gravity="bottom"
             android:textSize="50sp"
-            android:background="@android:drawable/ic_menu_help"/>
+            android:background="@drawable/question"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="320dp"
