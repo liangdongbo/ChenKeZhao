@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">NaoZi的脑</string>
+    <string name="app_home_welcomes_1">xxxxxxxxxxxxxxxx</string>
+    <string name="app_home_welcomes_2">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</string>
+    <string name="app_home_copyright">copyright@陈科肇</string>
+    <string name="app_home_email">联系方式310771881@qq.com</string>
+    <string name="app_home_menu1">GO...</string>
+    <string name="app_home_menu2">xxxx</string>
+    <string name="app_home_menu3">xxxxxxx</string>
+    <string name="app_go_squaredUp">操作说明：数字和按钮颜色对应</string>
+    <string name="app_go_equal">=</string>
+</resources>
