@@ -208,28 +208,29 @@ public class BitmapUtils {
     }
 
     /**
-     * 九宫格图片截取
+     * 九宫格图片截取数字
      * @param context 上下文
      * @param resid 九宫格图片ID
      * @return
      */
     public Bitmap[] getSquaredUpNum(Context context,int resid){
-        Bitmap resource = BitmapFactory.decodeResource(context.getResources(), resid);
-        Bitmap one = Bitmap.createBitmap(resource, 0, 0, 90, 120);
-        Bitmap two = Bitmap.createBitmap(resource, 90, 0, 207, 120);
-        Bitmap three = Bitmap.createBitmap(resource, 207, 0, 326, 120);
-        Bitmap four = Bitmap.createBitmap(resource, 326, 0, 438, 120);
-        Bitmap five = Bitmap.createBitmap(resource, 438, 0, 540, 120);
-        Bitmap six = Bitmap.createBitmap(resource, 0, 120, 90, 120);
-        Bitmap seven = Bitmap.createBitmap(resource, 90, 120, 207, 120);
-        Bitmap eight = Bitmap.createBitmap(resource, 207, 120, 326, 120);
-        Bitmap nine = Bitmap.createBitmap(resource, 326, 120, 438, 120);
-        Bitmap zero = Bitmap.createBitmap(resource, 438, 120, 540, 120);
-
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resid);
         //封装成数组
-        Bitmap[] bitmaps = new Bitmap[]{
-                one,two,three,four,five,six,seven,eight,nine,zero
-        };
+        int size = 10;
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int x = width/5;
+        int y = height/2;
+        Bitmap[] bitmaps = new Bitmap[size];
+        int j  = 0;
+        for(int i=0;i<size;i++){
+            if(i<5){
+                j=i;
+            }else{
+                j=i-5;
+            }
+            bitmaps[i] = Bitmap.createBitmap(bitmap,j*x,i>5?y:0,x*(i+1),y);
+        }
         return bitmaps;
     }
 
