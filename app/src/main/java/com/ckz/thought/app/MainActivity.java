@@ -1,17 +1,21 @@
 package com.ckz.thought.app;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ckz.thought.R;
-import com.ckz.thought.service.LocalhostMusicService;
-import com.ckz.thought.service.system.BackMusicService;
+import com.ckz.thought.service.MusicService;
+import com.ckz.thought.utils.BitmapUtils;
 
 /**
  * 程序的主页面
@@ -21,7 +25,22 @@ public class MainActivity extends AppCompatActivity {
 
     private static Intent backMusic = null;
 
-    private static final String TAG = "MainActivity";
+    //位图处理工具
+    private BitmapUtils bitmapUtils;
+
+    private ImageView btn_menu1;
+    private ImageView btn_menu2;
+    private ImageView btn_menu3;
+    private ImageView app_main_mute;
+    //音效播放服务
+    private MusicService musicService;
+
+    //统一管理bitmap资源
+    private Resources res;
+    private Bitmap[] bitmaps;
+    private Bitmap[] bitmaps_;
+
+    private final String TAG = MainActivity.class.getSimpleName();
     /**
      * 自定义单击事件监听类
      * 内部类
@@ -30,22 +49,62 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.app_main_menu_1:
-                    Toast.makeText(MainActivity.this,"你单击了 GO... 按钮",Toast.LENGTH_LONG).show();
-                    Intent goIntent = new Intent(MainActivity.this,GoActivity.class);
-                    startActivity(goIntent);
-                    break;
-                case R.id.app_main_menu_2:
-                    Toast.makeText(MainActivity.this, "你单击了 敢吗？ 按钮", Toast.LENGTH_SHORT).show();
-                    Intent memoryIntent = new Intent(MainActivity.this,MemoryActivity.class);
-                    startActivity(memoryIntent);
-                    break;
-                case R.id.app_main_menu_3:
-                    Toast.makeText(MainActivity.this, "你单击了 无视你 按钮", Toast.LENGTH_SHORT).show();
-                    Intent reactionIntent = new Intent(MainActivity.this,ReactionActivity.class);
-                    startActivity(reactionIntent);
+                case R.id.app_main_mute://声音
+                    if(musicService.getMediaPlayer()!=null){
+                        if (musicService.getMediaPlayer().isPlaying()){
+                            musicService.doStop();
+                            app_main_mute.setImageBitmap(bitmaps_[3]);
+                        }
+                    }else{
+                        musicService.doStart(MainActivity.this, R.raw.back_music, true);
+                        app_main_mute.setImageBitmap(bitmaps[3]);
+                    }
                     break;
             }
+        }
+    }
+
+    /**
+     * 触摸事件
+     */
+    private class MyTouchListener implements View.OnTouchListener{
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+
+            if(event.getAction()==MotionEvent.ACTION_DOWN){//按下
+                switch (v.getId()){
+                    case R.id.app_main_menu_1:
+                        btn_menu1.setImageBitmap(bitmaps_[0]);
+                        break;
+                    case R.id.app_main_menu_2:
+                        btn_menu2.setImageBitmap(bitmaps_[1]);
+                        break;
+                    case R.id.app_main_menu_3:
+                        btn_menu3.setImageBitmap(bitmaps_[2]);
+                        break;
+                }
+            }else if(event.getAction()== MotionEvent.ACTION_UP){//弹起
+                switch (v.getId()){
+                    case R.id.app_main_menu_1:
+                        btn_menu1.setImageBitmap(bitmaps[0]);
+                        Intent goIntent = new Intent(MainActivity.this,GoActivity.class);
+                        startActivity(goIntent);
+                        break;
+                    case R.id.app_main_menu_2:
+                        btn_menu2.setImageBitmap(bitmaps[1]);
+                        Intent memoryIntent = new Intent(MainActivity.this,MemoryActivity.class);
+                        startActivity(memoryIntent);
+                        break;
+                    case R.id.app_main_menu_3:
+                        btn_menu3.setImageBitmap(bitmaps[2]);
+                        Intent reactionIntent = new Intent(MainActivity.this,ReactionActivity.class);
+                        startActivity(reactionIntent);
+                        break;
+                }
+            }
+
+            return false;
         }
     }
 
@@ -54,43 +113,80 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.i(TAG, "onCreate...");
-
-        //按钮单击事件监听
-        Button btn_menu1 = (Button) findViewById(R.id.app_main_menu_1);
-        LinearLayout btn_menu2 = (LinearLayout) findViewById(R.id.app_main_menu_2);
-        Button btn_menu3 = (Button) findViewById(R.id.app_main_menu_3);
-        btn_menu1.setOnClickListener(new MainClickListener());
-        btn_menu2.setOnClickListener(new MainClickListener());
-        btn_menu3.setOnClickListener(new MainClickListener());
+        res = getResources();
+        //初始化音效工具类
+        musicService = new MusicService();
+        //初始化位图处理工具类
+        bitmapUtils = new BitmapUtils();
+        //获取资源对象
+        btn_menu1 = (ImageView) findViewById(R.id.app_main_menu_1);
+        btn_menu2 = (ImageView) findViewById(R.id.app_main_menu_2);
+        btn_menu3 = (ImageView) findViewById(R.id.app_main_menu_3);
+        app_main_mute = (ImageView) findViewById(R.id.app_main_mute);
+        //注册事件
+        btn_menu1.setOnTouchListener(new MyTouchListener());
+        btn_menu2.setOnTouchListener(new MyTouchListener());
+        btn_menu3.setOnTouchListener(new MyTouchListener());
+        //背景声音事件注册
+        app_main_mute.setOnClickListener(new MainClickListener());
+        //加载bitmap资源
+        if(bitmaps==null){
+            bitmaps = new Bitmap[]{
+                    bitmapUtils.compressBitmapFromResource(res, R.drawable.main_menu1,btn_menu1),
+                    bitmapUtils.compressBitmapFromResource(res, R.drawable.main_menu2, btn_menu2),
+                    bitmapUtils.compressBitmapFromResource(res, R.drawable.main_menu3, btn_menu3),
+                    bitmapUtils.compressBitmapFromResource(res, R.drawable.mute, app_main_mute),
+            };
+        }
+        //加载bitmap资源
+        if(bitmaps_==null){
+            bitmaps_ = new Bitmap[]{
+                    bitmapUtils.compressBitmapFromResource(res, R.drawable.main_menu1_1,btn_menu1),
+                    bitmapUtils.compressBitmapFromResource(res, R.drawable.main_menu2_1, btn_menu2),
+                    bitmapUtils.compressBitmapFromResource(res, R.drawable.main_menu3_1, btn_menu3),
+                    bitmapUtils.compressBitmapFromResource(res, R.drawable.mute_1, app_main_mute),
+            };
+        }
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart...");
-        LocalhostMusicService.doStart(MainActivity.this, R.raw.back_music, true);
+        musicService.doStart(MainActivity.this, R.raw.back_music, true);
+        //加载背景图片
+        btn_menu1.setImageBitmap(bitmaps[0]);
+        btn_menu2.setImageBitmap(bitmaps[1]);
+        btn_menu3.setImageBitmap(bitmaps[2]);
+        app_main_mute.setImageBitmap(bitmaps[3]);
     }
+
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i(TAG, "onStop...");
         new Thread(){
             @Override
             public void run() {
-                if(LocalhostMusicService.mediaPlayer!=null){
-                    if(!LocalhostMusicService.mediaPlayer.isLooping()){
-                        while (LocalhostMusicService.mediaPlayer.isPlaying()){
+                if(musicService.getMediaPlayer()!=null){
+                    if(!musicService.getMediaPlayer().isLooping()){
+                        while (musicService.getMediaPlayer().isPlaying()){
                         }
-                        LocalhostMusicService.doStop();
+                        musicService.doStop();
                     }else{
-                        LocalhostMusicService.doStop();
+                        musicService.doStop();
                     }
                 }
             }
         }.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //回收bitmap占存
+        bitmapUtils.recycleBitmaps(bitmaps);
+        bitmapUtils.recycleBitmaps(bitmaps_);
     }
 }
 

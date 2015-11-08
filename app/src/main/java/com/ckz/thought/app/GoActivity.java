@@ -1,6 +1,8 @@
 package com.ckz.thought.app;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ckz.thought.R;
-import com.ckz.thought.service.LocalhostMusicService;
+import com.ckz.thought.service.MusicService;
 import com.ckz.thought.utils.BitmapUtils;
 
 import java.util.ArrayList;
@@ -31,45 +33,70 @@ import java.util.TimerTask;
  */
 public class GoActivity extends AppCompatActivity{
 
-    private static final String TAG = GoActivity.class.getSimpleName();
-    private static int[][] btns;//九宫格按钮资源ID集合
-    private static int[][] drawId;//按钮资源ID
-    private static int[][] drawId_1;
-    private static int[][] btnColors;//按钮颜色集合
-    private static int temp = 0;//记录九宫格按钮按下的位置
-    private static ImageButton btn;
-    private static ImageView imageView;
-    private static TextView tvFormula;//显示公式的文本框
-    private static Bitmap bitmap;//九宫格数字位图
-
+    private Resources res;
+    //位图处理工具类
+    private BitmapUtils bitmapUtils;
+    //音效播放服务
+    private MusicService musicService;
+    private final String TAG = GoActivity.class.getSimpleName();
+    private int[][] btns;//九宫格按钮资源ID集合
+    private int[][] drawId;//按钮资源ID
+    private int[][] drawId_1;
+    private int[][] btnColors;//按钮颜色集合
+    private int temp = 0;//记录九宫格按钮按下的位置
+    private ImageView btn;
+    private ImageView imageView;
+    private TextView tvFormula;//显示公式的文本框
+    private Bitmap bitmap;//九宫格数字位图
     //随机公式创建
-    private static String[] operations=new String[]{"+","-","×"};
-    private static int numberOne = 0;
-    private static int numberTwo = 0;
-    private static int result = 0;
-    private static int numMax = 20;
-    private static List<Integer> btnClickResult;
+    private String[] operations=new String[]{"+","-","×"};
+    private int numberOne = 0;
+    private int numberTwo = 0;
+    private int result = 0;
+    private int numMax = 20;
+    private List<Integer> btnClickResult;//保存输入的结果值
     //private static int resultLength=5;//保存记录结果的最大长度
-    private static TextView recordInput;//记录输入的结果
-    private static TextView tvShowHelp;//显示结果帮助
-    private static int score =0;//分数记录
-    private static int count = 0;//操作次数
-    private static TextView app_go_score;//获取分数记录控件
-    private static TextView app_go_count;//获取操作次数控件
-    private static int setTimeOut = 5;//设置超时时间，单位秒(S)
-    private static int timeOut = 0;
-    private static TextView app_go_timeOut;//获取超时显示控件
+    private TextView recordInput;//记录输入的结果
+    private TextView tvShowHelp;//显示结果帮助
+    private int score =0;//分数记录
+    private int count = 0;//操作次数
+    private TextView app_go_score;//获取分数记录控件
+    private TextView app_go_count;//获取操作次数控件
+    private int setTimeOut = 5;//设置超时时间，单位秒(S)
+    private int timeOut = 0;
+    private TextView app_go_timeOut;//获取超时显示控件
     //提醒任务
-    private static Timer timer;
-    private static final int TIMEOUT =1;
+    private Timer timer;
+    private final int TIMEOUT =1;
+
+    //数字0按钮
+    private ImageView zeroBtn;
+
+    private Bitmap[] bitmaps;//记录下bitmap，便于回收
 
     //消息处理机制
     private final Handler myHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case TIMEOUT:
-                    Toast.makeText(GoActivity.this, "NoNoNo,＠︿＠,TimeOut 5 S", Toast.LENGTH_SHORT).show();
+                    //游戏超时
+                    gameOverMusic();
+                    Toast.makeText(GoActivity.this, "NoNoNo ＠︿＠ 超时 "+setTimeOut+" 秒", Toast.LENGTH_SHORT).show();
                     timeOut++;
+                    count++;
+                    score--;
+                    app_go_count.setText("次数：" + count);
+                    app_go_score.setText("分数："+score);
+                    app_go_timeOut.setText("超时："+timeOut+" 次");
+                    //创建运算公式
+                    String formula = createFormula();
+                    tvFormula.setText(formula);
+                    //清空记录
+                    recordInput.setText("");
+                    //洗牌所有
+                    shuffleAll();
+                    //清空记录结果
+                    btnClickResult=null;//设置为null，让垃圾回收机制回收
                     break;
                 default:
                     break;
@@ -88,11 +115,10 @@ public class GoActivity extends AppCompatActivity{
     class RemindTask extends TimerTask{
         @Override
         public void run() {
-            //do something when time's up
+            clearTimeout(); //Terminate the timer thread
             Message message = new Message();
             message.what = TIMEOUT;
             myHandler.sendMessage(message);
-            timer.cancel(); //Terminate the timer thread
         }
 
     }
@@ -102,8 +128,10 @@ public class GoActivity extends AppCompatActivity{
      * @param seconds
      */
     public void setTimeout(int seconds) {
-        timer = new Timer();
-        timer.schedule(new RemindTask(), seconds*1000);
+        if(timer==null){
+            timer = new Timer();
+            timer.schedule(new RemindTask(), seconds*1000);
+        }
 
     }
 
@@ -111,8 +139,11 @@ public class GoActivity extends AppCompatActivity{
      * 取消计时器任务
      */
     public void clearTimeout(){
-        timer.cancel();
-        timer.purge();
+        if(timer!=null){
+            timer.cancel();
+            timer.purge();
+            timer=null;
+        }
     }
 
 
@@ -125,8 +156,8 @@ public class GoActivity extends AppCompatActivity{
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.tvFormula :
-                    //game yes背景音乐
-                    LocalhostMusicService.doStart(GoActivity.this,R.raw.game_yes,false);
+                    //游戏通关音效
+                    gameNextMusic();
                     //创建运算公式
                     String formula = createFormula();
                     tvFormula.setText(formula);
@@ -153,35 +184,53 @@ public class GoActivity extends AppCompatActivity{
             //按下
             if(event.getAction() == MotionEvent.ACTION_DOWN){
                 switch (v.getId()){
+                    case R.id.textNumber://数字0按钮事件处理
+                        //保存单击的数字，不为空，0生效
+                        if(btnClickResult!=null){
+                            //按钮音效
+                            gameBtnMusic();
+                            //时间器-开始计时
+                            setTimeout(setTimeOut);
+                            btnClickResult.add(0);//记录0
+                            //判断答案与结果是否一致
+                            resultEquals();
+                        }else if(result==0){
+                            btnClickResult = new ArrayList<Integer>();
+                            btnClickResult.add(0);//记录0
+                            //判断答案与结果是否一致
+                            resultEquals();
+                        }
+                        break;
                     case R.id.tvFormula ://显示公式文本框事件
                         tvFormula.setBackground(null);
                         break;
                     case R.id.tvShowHelp ://显示结果帮助事件
-                        //?背景音乐
-                        LocalhostMusicService.doStart(GoActivity.this, R.raw.question, false);
+                        //?音效
+                        gameQuestionMusic();
                         String tempResult = String.valueOf(result);
                         if(tempResult.length()>2){
                             tempResult = "...";
                         }
                         tvShowHelp.setText(tempResult);
                         tvShowHelp.setBackground(null);
-                        Toast.makeText(GoActivity.this, "◎＿◎，你想干嘛", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GoActivity.this, "◎＿◎ 你想干嘛", Toast.LENGTH_SHORT).show();
                         break;
                     default://九宫格按钮事件
 
                         //时间器-开始计时
                         setTimeout(setTimeOut);
 
-                        //背景音乐
-                        LocalhostMusicService.doStart(GoActivity.this,R.raw.btn_click,false);
+                        //按钮音效
+                        gameBtnMusic();
                         int id = v.getId();
                         int length = btns.length;
                         for(int i=0;i<length;i++){
-                            btn = (ImageButton) findViewById(btns[i][1]);
+                            btn = (ImageView) findViewById(btns[i][1]);
                             if(btn.getId()==id){
                                 //对应事件
                                 temp=i;
-                                btn.setBackground(getResources().getDrawable(drawId_1[i][1]));
+                                //btn.setBackground(getResources().getDrawable(drawId_1[i][1]));
+                                btn.setImageBitmap(bitmapUtils.compressBitmapFromResource(res,drawId_1[i][1],btn));
                                 //找到对应的数字
                                 int num = drawId[i][0];
                                 int flag = 0;
@@ -199,50 +248,10 @@ public class GoActivity extends AppCompatActivity{
                                     btnClickResult = new ArrayList<Integer>();
                                 }
                                 btnClickResult.add(flag+1);
+
                                 //判断答案与结果是否一致
-                                int result_l = btnClickResult.size();
-                                String resultStr = "";
-                                for(int r=0;r<result_l;r++){
-                                    resultStr+=btnClickResult.get(r);
-                                    recordInput.setText("历史记录："+resultStr);
-                                }
-                                boolean rFlag = false;//是否洗牌标记
-                                String message ="";
-                                if(result==Integer.parseInt(resultStr)){
-                                    //game over背景音乐
-                                    LocalhostMusicService.doStart(GoActivity.this,R.raw.game_yes,false);
-                                    //答案与结果一致
-                                    rFlag = true;
-                                    message = "Very Good，←︿←";
-                                    score++;//加一分
-                                    count++;//记录操作次数
-                                }else if(result_l>String.valueOf(result).length() || Integer.parseInt(resultStr)>result){
-                                    //game over背景音乐
-                                    LocalhostMusicService.doStart(GoActivity.this,R.raw.game_over,false);
-                                    //答案不一致，并记录值超出正确结果长度
-                                    rFlag = true;
-                                    message = "呵呵，↓◎＿◎↓，＞正确结果";
-                                    score--;//减一分
-                                    count++;//记录操作次数
-                                }
-                                if(rFlag){
-                                    Toast.makeText(GoActivity.this, message, Toast.LENGTH_SHORT).show();
-                                    //洗牌
-                                    shuffleAll();
-                                    //创建公式
-                                    String formula = createFormula();
-                                    tvFormula.setText(formula);
-                                    btnClickResult=null;//设置为null，让垃圾回收机制回收
-                                    //清空记录
-                                    recordInput.setText("");
-                                    //清空帮助
-                                    tvShowHelp.setText("");
-                                    tvShowHelp.setBackground(getResources().getDrawable(R.drawable.question));
-                                    //显示记录数据
-                                    app_go_count.setText("次数："+count);
-                                    app_go_score.setText("分数："+score);
-                                    app_go_timeOut.setText("超时："+timeOut+" 次");
-                                }
+                                resultEquals();
+
                                 break;
                             }
                         }
@@ -262,7 +271,8 @@ public class GoActivity extends AppCompatActivity{
                         tvShowHelp.setBackground(getResources().getDrawable(R.drawable.question));
                         break;
                     default://九宫格按钮事件
-                        btn.setBackground(getResources().getDrawable(drawId[temp][1]));
+                        //btn.setBackground(getResources().getDrawable(drawId[temp][1]));
+                        btn.setImageBitmap(bitmapUtils.compressBitmapFromResource(res,drawId[temp][1],btn));
                         break;
                 }
             }
@@ -275,9 +285,16 @@ public class GoActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_go);
 
-        //背景音乐
-        LocalhostMusicService.doStart(GoActivity.this, R.raw.back_go_start, false);
+        res = getResources();
+        //activity创建背景音效
+        //gameBackMusic();
+        //初始化音效工具类
+        musicService = new MusicService();
+        //初始化工具类
+        bitmapUtils=new BitmapUtils();
 
+        //数字0事件
+        zeroBtn = (ImageView) findViewById(R.id.textNumber);
         //初始化资源
         app_go_score = (TextView) findViewById(R.id.app_go_score);
         app_go_count = (TextView) findViewById(R.id.app_go_count);
@@ -326,8 +343,8 @@ public class GoActivity extends AppCompatActivity{
                 {9,R.id.btnI_9}
         };
 
-        //app_go_number 1620x720
-        bitmap = BitmapUtils.getMutableBitmap(getResources(),R.drawable.app_go_number);
+        //app_go_number
+        bitmap = bitmapUtils.getMutableBitmap(getResources(),R.drawable.app_go_number);
         //九宫格按钮颜色数组
         btnColors = new int[][]{
                 {1,getResources().getColor(R.color.btn_go_one)},
@@ -348,6 +365,8 @@ public class GoActivity extends AppCompatActivity{
         //帮助help事件注册，XML添加android:clickable="true"
         tvShowHelp.setOnTouchListener(new MyBtnTouchListener());
 
+        //注册0的处理事件
+        zeroBtn.setOnTouchListener(new MyBtnTouchListener());
 
         //注册按钮监听事件
         int length = btns.length;
@@ -402,9 +421,12 @@ public class GoActivity extends AppCompatActivity{
         }
 
         int length = btns.length;
+        bitmaps = new Bitmap[length];
         for(int i=0;i<length;i++){
-            View btn = findViewById(btns[i][1]);
-            btn.setBackground(getResources().getDrawable(list.get(i)[1]));
+            ImageView btn = (ImageView) findViewById(btns[i][1]);
+            //btn.setBackground(getResources().getDrawable(list.get(i)[1]));
+            bitmaps[i]=bitmapUtils.compressBitmapFromResource(res,list.get(i)[1],btn);
+            btn.setImageBitmap(bitmaps[i]);
         }
     }
 
@@ -434,7 +456,7 @@ public class GoActivity extends AppCompatActivity{
             if(i>=5){
                 j=i-5;
             }
-            bitmap=BitmapUtils.setBitmapPixel(
+            bitmap=bitmapUtils.setBitmapPixel(
                     bitmap,
                     xW*j,
                     yH*n,
@@ -486,6 +508,92 @@ public class GoActivity extends AppCompatActivity{
         return new Random().nextInt(max);
     }
 
+    /**
+     * 判断答案与结果是否一致
+     */
+    private void resultEquals(){
+        int result_l = btnClickResult.size();
+        String resultStr = "";
+        for(int r=0;r<result_l;r++){
+            resultStr+=btnClickResult.get(r);
+            recordInput.setText("操作记录："+resultStr);
+        }
+        boolean rFlag = false;//是否洗牌标记
+        String message ="";
+        if(result==Integer.parseInt(resultStr)){
+            //通关音效
+            gameNextMusic();
+            //答案与结果一致
+            rFlag = true;
+            message = "Very Good，←︿←";
+            score++;//加一分
+            count++;//记录操作次数
+        }else if(Integer.parseInt(resultStr)>result){
+            //game over背景音乐
+            gameOverMusic();
+            //答案不一致，并记录值超出正确结果长度
+            rFlag = true;
+            message = "呵呵 ↓◎＿◎↓ 大于正确结果";
+            score--;//减一分
+            count++;//记录操作次数
+        }
+        if(rFlag){
+            //取消计时器
+            clearTimeout();
+            Toast.makeText(GoActivity.this, message, Toast.LENGTH_SHORT).show();
+            //洗牌
+            shuffleAll();
+            //创建公式
+            String formula = createFormula();
+            tvFormula.setText(formula);
+            btnClickResult=null;//设置为null，让垃圾回收机制回收
+            //清空记录
+            recordInput.setText("");
+            //清空帮助
+            tvShowHelp.setText("");
+            tvShowHelp.setBackground(getResources().getDrawable(R.drawable.question));
+            //显示记录数据
+            app_go_count.setText("次数："+count);
+            app_go_score.setText("分数："+score);
+            app_go_timeOut.setText("超时("+setTimeOut+"秒)："+timeOut+" 次");
+        }
+    }
+
+    /**
+     * 游戏结束音效
+     */
+    private void gameOverMusic(){
+        musicService.doStart(GoActivity.this,R.raw.game_over,false);
+    }
+
+    /**
+     * 游戏按钮音效
+     */
+    private void gameBtnMusic(){
+        musicService.doStart(GoActivity.this,R.raw.btn_click,false);
+    }
+
+    /**
+     * activity启动音效
+     */
+    private void gameBackMusic(){
+        musicService.doStart(GoActivity.this, R.raw.back_go_start, false);
+    }
+
+    /**
+     * 游戏通关音效
+     */
+    private void gameNextMusic(){
+        musicService.doStart(GoActivity.this,R.raw.game_yes,false);
+    }
+
+    /**
+     * 疑问音效
+     */
+    private void gameQuestionMusic(){
+        musicService.doStart(GoActivity.this, R.raw.question, false);
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -494,6 +602,9 @@ public class GoActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        clearTimeout();
+        //回收bitmap
+        bitmapUtils.recycleBitmaps(bitmaps);
     }
 
 

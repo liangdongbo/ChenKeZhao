@@ -34,62 +34,65 @@
             android:textSize="15sp"
             />
 
-        <Button
+        <ImageView
             android:id="@+id/app_main_menu_1"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/btn_css_activity"
-            android:textColor="#ffffff"
-            android:text="@string/app_home_menu1"
-            android:textSize="40sp" />
-
-        <LinearLayout
-            android:id="@+id/app_main_menu_2"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/btn_css_activity"
             android:clickable="true"
-            android:orientation="horizontal">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:background="@android:color/transparent"
-                android:textColor="#ffffff"
-                android:clickable="false"
-                android:text="@string/app_home_menu2"
-                android:textSize="40sp" />
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:background="@drawable/m2" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/app_main_menu_3"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
             android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/btn_css_activity"
+            android:layout_marginTop="30dp"/>
+        <TextView
+            style="@style/AudioFileInfoOverlayText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_home_menu1"
             android:textColor="#ffffff"
+            android:gravity="center"
+            android:textSize="20sp" />
+
+
+        <ImageView
+            android:id="@+id/app_main_menu_2"
+            android:clickable="true"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            style="@style/AudioFileInfoOverlayText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_home_menu2"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/app_main_menu_3"
+            android:clickable="true"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            style="@style/AudioFileInfoOverlayText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/app_home_menu3"
-            android:textSize="40sp" />
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:textSize="20sp" />
+
 
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            android:layout_height="wrap_content">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
@@ -108,10 +111,11 @@
                     android:textSize="14sp"/>
             </LinearLayout>
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/m_bg"
-                android:alpha="0.2"/>
+                android:id="@+id/app_main_mute"
+                android:layout_marginTop="30dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="right"/>
         </FrameLayout>
     </LinearLayout>
 </ScrollView>

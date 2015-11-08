@@ -1,10 +1,14 @@
 package com.ckz.thought.utils;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.ckz.thought.R;
 
@@ -15,7 +19,9 @@ import com.ckz.thought.R;
 public class BitmapUtils {
 
 
-    public static Bitmap xx(){
+    private static final String TAG = BitmapUtils.class.getSimpleName();
+
+    public Bitmap xx(){
         /*updateBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
         canvas = new Canvas(updateBitmap);
         paint = new Paint();
@@ -37,6 +43,99 @@ public class BitmapUtils {
     }
 
     /**
+     * 回收bitmap
+     * setImageBitmap()这个方法的源码，实际上它内部做了类似指针传递的操作，
+     * 它并没有新建Bitmap对象，而是对其进行了引用而已。
+     * @param bitmaps Bitmap[]
+     */
+    public void recycleBitmaps(Bitmap[] bitmaps){
+        int length = bitmaps.length;
+        for(int i=0;i<length;i++){
+            if(!bitmaps[i].isRecycled()){
+                bitmaps[i].recycle();//回收bitmap，释放内存点存
+            }
+        }
+    }
+
+    /**
+     * 回收bitmap
+     * setImageBitmap()这个方法的源码，实际上它内部做了类似指针传递的操作，
+     * 它并没有新建Bitmap对象，而是对其进行了引用而已。
+     * @param bitmap Bitmap[]
+     */
+    public void recycleBitmap(Bitmap bitmap){
+        if(!bitmap.isRecycled()){
+            bitmap.recycle();
+        }
+    }
+
+    /**
+     * 对图片进行压缩，传入的宽和高，计算出合适的inSampleSize值
+     * @param options BitmapFactory.Options
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
+    public int calculateInSampleSize(BitmapFactory.Options options,int reqWidth, int reqHeight) {
+        // 源图片的高度和宽度
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+        if (height > reqHeight || width > reqWidth) {
+            // 计算出实际宽高和目标宽高的比率
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            // 选择宽和高中最小的比率作为inSampleSize的值，这样可以保证最终图片的宽和高
+            // 一定都会大于等于目标的宽和高。
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        return inSampleSize;
+    }
+
+    /**
+     * 先解析得到合适的大小，再进行处理显示
+     * @param res
+     * @param resId
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
+    public Bitmap compressBitmapFromResource(Resources res, int resId,
+                                             int reqWidth, int reqHeight) {
+        // 第一次解析将inJustDecodeBounds设置为true，来获取图片大小
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+        // 调用上面定义的方法计算inSampleSize值
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        // 使用获取到的inSampleSize值再次解析图片
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    /**
+     * 先解析得到合适的大小，再进行处理显示
+     * @param res
+     * @param resId
+     * @param view 对象，用于取出view的width,height
+     * @return
+     */
+    public Bitmap compressBitmapFromResource(Resources res, int resId,View view) {
+        //获取组件布局参数
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        // 第一次解析将inJustDecodeBounds设置为true，来获取图片大小
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+        // 调用上面定义的方法计算inSampleSize值
+        options.inSampleSize = calculateInSampleSize(options, params.width, params.height);
+        // 使用获取到的inSampleSize值再次解析图片
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+
+    /**
      * 设置指定像素区域的颜色
      * 只有透明和白色的像素点是不修改的
      * @param bitmap 位图
@@ -47,7 +146,7 @@ public class BitmapUtils {
      * @param setColor xml定义的颜色资源ID
      * @return 修改后的Bitmap
      */
-    public static Bitmap setBitmapPixel(Bitmap bitmap,int startX,int startY,int endX,int endY,int setColor){
+    public Bitmap setBitmapPixel(Bitmap bitmap,int startX,int startY,int endX,int endY,int setColor){
         //没必要每次都循环图片中的所有点，因为这样会比较耗时。
         int loopCount = startY * startX;
         //填充颜色的起始点 开始 到 终点
@@ -77,8 +176,8 @@ public class BitmapUtils {
      * @param resid
      * @return
      */
-    public static int[] getBitmapPixel(Resources resources,int resid){
-        Bitmap bitmap = BitmapUtils.getMutableBitmap(resources, resid);
+    public int[] getBitmapPixel(Resources resources,int resid){
+        Bitmap bitmap = getMutableBitmap(resources, resid);
         //处理图片的第个像素点
         int bitmapWidth = 0;
         int bitmapHeight = 0;
@@ -114,7 +213,7 @@ public class BitmapUtils {
      * @param resid 九宫格图片ID
      * @return
      */
-    public static Bitmap[] getSquaredUpNum(Context context,int resid){
+    public Bitmap[] getSquaredUpNum(Context context,int resid){
         Bitmap resource = BitmapFactory.decodeResource(context.getResources(), resid);
         Bitmap one = Bitmap.createBitmap(resource, 0, 0, 90, 120);
         Bitmap two = Bitmap.createBitmap(resource, 90, 0, 207, 120);
@@ -143,7 +242,7 @@ public class BitmapUtils {
      * @param resId
      * @return
      */
-    public static Bitmap getMutableBitmap(Resources resources,int resId) {
+    public Bitmap getMutableBitmap(Resources resources,int resId) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
         return BitmapFactory.decodeResource(resources, resId, options);
