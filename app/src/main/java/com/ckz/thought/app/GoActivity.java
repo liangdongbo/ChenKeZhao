@@ -2,20 +2,18 @@ package com.ckz.thought.app;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ckz.thought.R;
-import com.ckz.thought.service.MusicService;
+import com.ckz.thought.utils.MusicUtils;
 import com.ckz.thought.utils.BitmapUtils;
 
 import java.util.ArrayList;
@@ -37,7 +35,7 @@ public class GoActivity extends AppCompatActivity{
     //位图处理工具类
     private BitmapUtils bitmapUtils;
     //音效播放服务
-    private MusicService musicService;
+    private MusicUtils musicUtils;
     private final String TAG = GoActivity.class.getSimpleName();
     private int[][] btns;//九宫格按钮资源ID集合
     private int[][] drawId;//按钮资源ID
@@ -289,7 +287,7 @@ public class GoActivity extends AppCompatActivity{
         //activity创建背景音效
         //gameBackMusic();
         //初始化音效工具类
-        musicService = new MusicService();
+        musicUtils = new MusicUtils();
         //初始化工具类
         bitmapUtils=new BitmapUtils();
 
@@ -563,35 +561,35 @@ public class GoActivity extends AppCompatActivity{
      * 游戏结束音效
      */
     private void gameOverMusic(){
-        musicService.doStart(GoActivity.this,R.raw.game_over,false);
+        musicUtils.doStart(GoActivity.this,R.raw.game_over,false);
     }
 
     /**
      * 游戏按钮音效
      */
     private void gameBtnMusic(){
-        musicService.doStart(GoActivity.this,R.raw.btn_click,false);
+        musicUtils.doStart(GoActivity.this,R.raw.btn_click,false);
     }
 
     /**
      * activity启动音效
      */
     private void gameBackMusic(){
-        musicService.doStart(GoActivity.this, R.raw.back_go_start, false);
+        musicUtils.doStart(GoActivity.this, R.raw.back_go_start, false);
     }
 
     /**
      * 游戏通关音效
      */
     private void gameNextMusic(){
-        musicService.doStart(GoActivity.this,R.raw.game_yes,false);
+        musicUtils.doStart(GoActivity.this,R.raw.game_yes,false);
     }
 
     /**
      * 疑问音效
      */
     private void gameQuestionMusic(){
-        musicService.doStart(GoActivity.this, R.raw.question, false);
+        musicUtils.doStart(GoActivity.this, R.raw.question, false);
     }
 
     @Override

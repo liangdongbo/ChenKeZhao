@@ -3,18 +3,14 @@ package com.ckz.thought.app;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.ckz.thought.R;
-import com.ckz.thought.service.MusicService;
+import com.ckz.thought.utils.MusicUtils;
 import com.ckz.thought.utils.BitmapUtils;
 
 /**
@@ -33,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView btn_menu3;
     private ImageView app_main_mute;
     //音效播放服务
-    private MusicService musicService;
+    private MusicUtils musicUtils;
 
     //统一管理bitmap资源
     private Resources res;
@@ -50,13 +46,13 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.app_main_mute://声音
-                    if(musicService.getMediaPlayer()!=null){
-                        if (musicService.getMediaPlayer().isPlaying()){
-                            musicService.doStop();
+                    if(musicUtils.getMediaPlayer()!=null){
+                        if (musicUtils.getMediaPlayer().isPlaying()){
+                            musicUtils.doStop();
                             app_main_mute.setImageBitmap(bitmaps_[3]);
                         }
                     }else{
-                        musicService.doStart(MainActivity.this, R.raw.back_music, true);
+                        musicUtils.doStart(MainActivity.this, R.raw.back_music, true);
                         app_main_mute.setImageBitmap(bitmaps[3]);
                     }
                     break;
@@ -115,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         res = getResources();
         //初始化音效工具类
-        musicService = new MusicService();
+        musicUtils = new MusicUtils();
         //初始化位图处理工具类
         bitmapUtils = new BitmapUtils();
         //获取资源对象
@@ -153,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        musicService.doStart(MainActivity.this, R.raw.back_music, true);
+        musicUtils.doStart(MainActivity.this, R.raw.back_music, true);
         //加载背景图片
         btn_menu1.setImageBitmap(bitmaps[0]);
         btn_menu2.setImageBitmap(bitmaps[1]);
@@ -168,13 +164,13 @@ public class MainActivity extends AppCompatActivity {
         new Thread(){
             @Override
             public void run() {
-                if(musicService.getMediaPlayer()!=null){
-                    if(!musicService.getMediaPlayer().isLooping()){
-                        while (musicService.getMediaPlayer().isPlaying()){
+                if(musicUtils.getMediaPlayer()!=null){
+                    if(!musicUtils.getMediaPlayer().isLooping()){
+                        while (musicUtils.getMediaPlayer().isPlaying()){
                         }
-                        musicService.doStop();
+                        musicUtils.doStop();
                     }else{
-                        musicService.doStop();
+                        musicUtils.doStop();
                     }
                 }
             }
