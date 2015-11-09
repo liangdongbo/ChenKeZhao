@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.ThumbnailUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,19 @@ public class BitmapUtils {
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
         }
         return inSampleSize;
+    }
+
+    /**
+     * 生成缩略图
+     * @param bitmap
+     * @param view
+     * @return
+     */
+    public Bitmap compressBitmapFromBitmap(Bitmap bitmap,View view) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        int width = params.width;
+        int height = params.height;
+        return ThumbnailUtils.extractThumbnail(bitmap,width,height);
     }
 
     /**
@@ -229,7 +243,7 @@ public class BitmapUtils {
             }else{
                 j=i-5;
             }
-            bitmaps[i] = Bitmap.createBitmap(bitmap,j*x,i>5?y:0,x*(i+1),y);
+            bitmaps[i] = Bitmap.createBitmap(bitmap,j*x,i>4?y:0,x,y);
         }
         return bitmaps;
     }
