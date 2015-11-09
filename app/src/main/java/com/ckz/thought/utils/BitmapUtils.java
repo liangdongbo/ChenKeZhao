@@ -13,6 +13,14 @@ import android.view.ViewGroup;
 
 import com.ckz.thought.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 /**
  * Created by kaiser on 2015/10/31.
  * 位图处理工具
@@ -225,9 +233,16 @@ public class BitmapUtils {
      * 九宫格图片截取数字
      * @param context 上下文
      * @param resid 九宫格图片ID
+     * @param btnColors 颜色集数组
      * @return
      */
-    public Bitmap[] getSquaredUpNum(Context context,int resid){
+    public List<Map<String,Object>> getSquaredUpNum(Context context,int resid,int[] btnColors){
+
+        //洗牌颜色数组
+        List colors = Arrays.asList(btnColors);
+        Collections.shuffle(colors);
+
+        List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resid);
         //封装成数组
         int size = 10;
@@ -235,17 +250,23 @@ public class BitmapUtils {
         int height = bitmap.getHeight();
         int x = width/5;
         int y = height/2;
-        Bitmap[] bitmaps = new Bitmap[size];
         int j  = 0;
         for(int i=0;i<size;i++){
+            Map<String,Object> map = new HashMap<String,Object>();
             if(i<5){
                 j=i;
             }else{
                 j=i-5;
             }
-            bitmaps[i] = Bitmap.createBitmap(bitmap,j*x,i>4?y:0,x,y);
+
+            Bitmap b = Bitmap.createBitmap(bitmap, j * x, i > 4 ? y : 0, x, y);
+            b = setBitmapPixel(b,0,0,x,y,btnColors[i]);
+            map.put("bitmap",b);
+            map.put("number",(i+1));
+            list.add(map);
+
         }
-        return bitmaps;
+        return list;
     }
 
 
