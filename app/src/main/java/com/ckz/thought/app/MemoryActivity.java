@@ -347,12 +347,12 @@ public class MemoryActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        musicUtils.doStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        musicUtils.doStop();
     }
 
     /**
