@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
 
+import com.ckz.thought.R;
+
 /**
  * Created by kaiser on 2015/10/29.
  * 本地音乐播放服务
@@ -68,5 +70,41 @@ public class MusicUtils {
         if (mediaPlayer!=null){
             mediaPlayer.pause();
         }
+    }
+
+
+    /**
+     * 游戏结束音效
+     */
+    public void gameOverMusic(Context context){
+        doStart(context, R.raw.game_over, false);
+    }
+
+    /**
+     * 游戏按钮音效
+     */
+    public void gameBtnMusic(Context context){
+        doStart(context, R.raw.btn_click, false);
+    }
+
+    /**
+     * activity启动音效
+     */
+    public void gameBackMusic(Context context){
+        doStart(context, R.raw.back_go_start, false);
+    }
+
+    /**
+     * 游戏通关音效
+     */
+    public void gameNextMusic(Context context){
+        doStart(context, R.raw.game_yes, false);
+    }
+
+    /**
+     * 疑问音效
+     */
+    public void gameQuestionMusic(Context context){
+        doStart(context, R.raw.question, false);
     }
 }

@@ -32,14 +32,14 @@ public class TimerUtils {
         myHandler = handler;
     }
 
-    /**
-     * 消息机制序列号的设置
-     * @param number
-     */
-    public void setSequence(int number){
-        sequence = number;
-    }
 
+    /**
+     * 提供访问接口，获取 Timer对象
+     * @return
+     */
+    public Timer getTimer(){
+        return timer;
+    }
 
     /**
      * 提醒任务
@@ -55,13 +55,26 @@ public class TimerUtils {
 
     /**
      * 设置计时，秒为单位
-     *
-     * @param seconds
+     * @param seconds1 第一次多久执行
+     * @param seconds2 之后每一次多久执行
+     * @param number 消息机制触发号
      */
-    public void setTimeout(int seconds) {
+    public void setTimeout(int seconds1,int seconds2,int number) {
+        sequence = number;//消息机制序列号的设置
         timer = new Timer();
         //第一次多久触发，之后每次多久触发
-        timer.schedule(new RemindTask(), seconds * 1000,seconds * 1000);
+        timer.schedule(new RemindTask(), seconds1 * 1000,seconds2 * 1000);
+    }
+    /**
+     * 设置计时，秒为单位
+     * @param seconds 第一次多久执行
+     * @param number 消息机制触发号
+     */
+    public void setTimeout(int seconds,int number) {
+        sequence = number;//消息机制序列号的设置
+        timer = new Timer();
+        //第一次多久触发，之后每次多久触发
+        timer.schedule(new RemindTask(), seconds * 1000);
     }
 
     /**

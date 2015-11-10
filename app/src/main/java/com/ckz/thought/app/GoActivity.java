@@ -78,7 +78,7 @@ public class GoActivity extends AppCompatActivity{
             switch (msg.what){
                 case TIMEOUT:
                     //游戏超时
-                    gameOverMusic();
+                    musicUtils.gameOverMusic(GoActivity.this);
                     Toast.makeText(GoActivity.this, "NoNoNo ＠︿＠ 超时 "+setTimeOut+" 秒", Toast.LENGTH_SHORT).show();
                     timeOut++;
                     count++;
@@ -155,7 +155,7 @@ public class GoActivity extends AppCompatActivity{
             switch (v.getId()){
                 case R.id.tvFormula :
                     //游戏通关音效
-                    gameNextMusic();
+                    musicUtils.gameNextMusic(GoActivity.this);
                     //创建运算公式
                     String formula = createFormula();
                     tvFormula.setText(formula);
@@ -186,7 +186,7 @@ public class GoActivity extends AppCompatActivity{
                         //保存单击的数字，不为空，0生效
                         if(btnClickResult!=null){
                             //按钮音效
-                            gameBtnMusic();
+                            musicUtils.gameBtnMusic(GoActivity.this);
                             //时间器-开始计时
                             setTimeout(setTimeOut);
                             btnClickResult.add(0);//记录0
@@ -204,7 +204,7 @@ public class GoActivity extends AppCompatActivity{
                         break;
                     case R.id.tvShowHelp ://显示结果帮助事件
                         //?音效
-                        gameQuestionMusic();
+                        musicUtils.gameQuestionMusic(GoActivity.this);
                         String tempResult = String.valueOf(result);
                         if(tempResult.length()>2){
                             tempResult = "...";
@@ -219,7 +219,7 @@ public class GoActivity extends AppCompatActivity{
                         setTimeout(setTimeOut);
 
                         //按钮音效
-                        gameBtnMusic();
+                        musicUtils.gameBtnMusic(GoActivity.this);
                         int id = v.getId();
                         int length = btns.length;
                         for(int i=0;i<length;i++){
@@ -520,7 +520,7 @@ public class GoActivity extends AppCompatActivity{
         String message ="";
         if(result==Integer.parseInt(resultStr)){
             //通关音效
-            gameNextMusic();
+            musicUtils.gameNextMusic(GoActivity.this);
             //答案与结果一致
             rFlag = true;
             message = "Very Good，←︿←";
@@ -528,7 +528,7 @@ public class GoActivity extends AppCompatActivity{
             count++;//记录操作次数
         }else if(Integer.parseInt(resultStr)>result){
             //game over背景音乐
-            gameOverMusic();
+            musicUtils.gameOverMusic(GoActivity.this);
             //答案不一致，并记录值超出正确结果长度
             rFlag = true;
             message = "呵呵 ↓◎＿◎↓ 大于正确结果";
@@ -557,40 +557,7 @@ public class GoActivity extends AppCompatActivity{
         }
     }
 
-    /**
-     * 游戏结束音效
-     */
-    private void gameOverMusic(){
-        musicUtils.doStart(GoActivity.this,R.raw.game_over,false);
-    }
 
-    /**
-     * 游戏按钮音效
-     */
-    private void gameBtnMusic(){
-        musicUtils.doStart(GoActivity.this,R.raw.btn_click,false);
-    }
-
-    /**
-     * activity启动音效
-     */
-    private void gameBackMusic(){
-        musicUtils.doStart(GoActivity.this, R.raw.back_go_start, false);
-    }
-
-    /**
-     * 游戏通关音效
-     */
-    private void gameNextMusic(){
-        musicUtils.doStart(GoActivity.this,R.raw.game_yes,false);
-    }
-
-    /**
-     * 疑问音效
-     */
-    private void gameQuestionMusic(){
-        musicUtils.doStart(GoActivity.this, R.raw.question, false);
-    }
 
     @Override
     protected void onStop() {
