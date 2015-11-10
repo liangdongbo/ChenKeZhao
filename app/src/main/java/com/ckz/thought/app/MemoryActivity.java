@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ import java.util.TimerTask;
 public class MemoryActivity extends AppCompatActivity {
 
     private static final String TAG = MemoryActivity.class.getSimpleName();
+    private ImageView iv_back;//当前背景图
     private GridView gridView;
     private List<Map<String, Object>> resource;//gridview适配器数据源
     private BitmapUtils bitmapUtils;//位图处理工具类
@@ -107,19 +109,19 @@ public class MemoryActivity extends AppCompatActivity {
                     break;
                 case LOOP ://循环处理
                     int s = setTimeout;
-                    btn_memory_end.setClickable(false);
+                    //btn_memory_end.setClickable(false);
                     if(second>s){
                         second = second-s;
                     }
-                    btn_memory_end.setText("开始倒计时："+second);
-                    if (second==s){
+                    btn_memory_end.setText("开始倒计时："+(s-second));
+                    second++;
+                    if ((second-1)==s){
                         refreshNumbers(bitmaps.size(), false);
                         timerTime.clearTimeout();
                         recordResult="";
                         btn_memory_end.setText("请按顺序输入数字...");
-                        /*gridView.setOnItemClickListener(new ItemClickListener());*/
+                        second=1;//重新记数
                     }
-                    second++;
                     break;
                 case BTNLISTENER://按钮已经获取，可以监听
                     //注册按钮事件
@@ -204,7 +206,6 @@ public class MemoryActivity extends AppCompatActivity {
                         }
                     }
                 }
-
             }
             if(event.getAction()==MotionEvent.ACTION_UP){//弹起
                 if(v.getId()==R.id.app_memory_recordInput){//显示结果
@@ -225,6 +226,7 @@ public class MemoryActivity extends AppCompatActivity {
         app_memory_score.setText("分数："+score);
         app_memory_timeOut.setText("超时："+oTimeout);
     }
+
     /**
      * 单击监听事件
      */
@@ -234,6 +236,8 @@ public class MemoryActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.btn_memory_go :
+                    //去掉背景
+                    iv_back.setBackground(null);
                     btn_memory_go.setText("");
                     //开始游戏
                     timerTime.setTimeout(0,second,LOOP);
@@ -243,15 +247,24 @@ public class MemoryActivity extends AppCompatActivity {
                     btn_memory_end = (Button) findViewById(R.id.btn_memory_end);
                     break;
                 case R.id.btn_memory_end :
-                    //结束游戏
-                    timerUtils.clearTimeout();
-                    timerTime.clearTimeout();
-                    second=1;
-                    //重新布置数字显示
-                    refreshNumbers(bitmaps.size(),false);
-                    //改变按钮属性
-                    btn_memory_go.setText("开始");
-                    btn_memory_go.setId(R.id.btn_memory_go);
+                    String temp = btn_memory_end.getText().toString();
+                    if(!"请按顺序输入数字...".equals(temp)){
+                        refreshNumbers(bitmaps.size(), false);
+                        timerTime.clearTimeout();
+                        recordResult="";
+                        btn_memory_end.setText("请按顺序输入数字...");
+                        second=1;//重新记数
+                    }else{
+                        /*//结束游戏
+                        timerUtils.clearTimeout();
+                        timerTime.clearTimeout();
+                        second=1;
+                        //重新布置数字显示
+                        refreshNumbers(bitmaps.size(),false);
+                        //改变按钮属性
+                        btn_memory_go.setText("开始");
+                        btn_memory_go.setId(R.id.btn_memory_go);*/
+                    }
                     break;
             }
         }
@@ -261,6 +274,7 @@ public class MemoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memory);
+        iv_back = (ImageView) findViewById(R.id.iv_back);
         gridView = (GridView) findViewById(R.id.gridView);
         bitmapUtils = new BitmapUtils();
         res = getResources();
@@ -308,8 +322,8 @@ public class MemoryActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //显示数字
-        refreshNumbers(bitmaps.size(),false);
+        //欢迎页面
+        iv_back.setBackground(res.getDrawable(R.drawable.back1));
     }
 
     /**
@@ -338,12 +352,12 @@ public class MemoryActivity extends AppCompatActivity {
                 setTimeout=3;
                 rank="小样4";
             }else if(score>=50){
-                count = 7;
+                count = 9;
                 setTimeout=4;
                 rank="小样5+";
             }else{//乳化
                 count = 2;
-                setTimeout=2;
+                setTimeout=3;
                 rank="小样0";
             }
             app_memory_rank.setText("等级："+rank);
