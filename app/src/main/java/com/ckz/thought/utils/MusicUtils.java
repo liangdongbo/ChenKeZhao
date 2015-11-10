@@ -74,31 +74,50 @@ public class MusicUtils {
 
 
     /**
-     * 游戏结束音效
+     * 游戏结束音效1
      */
     public void gameOverMusic(Context context){
         doStart(context, R.raw.game_over, false);
     }
+    /**
+     * 游戏结束音效2
+     */
+    public void gameOverMusic2(Context context){
+        doStart(context, R.raw.game_over1, false);
+    }
 
     /**
-     * 游戏按钮音效
+     * 游戏按钮音效1
      */
     public void gameBtnMusic(Context context){
         doStart(context, R.raw.btn_click, false);
     }
 
     /**
-     * activity启动音效
+     * 游戏按钮音效2
+     */
+    public void gameBtnMusic2(Context context){
+        doStart(context, R.raw.btn_click1, false);
+    }
+
+    /**
+     * activity启动音效1
      */
     public void gameBackMusic(Context context){
         doStart(context, R.raw.back_go_start, false);
+    }
+    /**
+     * activity启动音效2
+     */
+    public void gameBackMusic2(Context context){
+        doStart(context, R.raw.back, false);
     }
 
     /**
      * 游戏通关音效
      */
     public void gameNextMusic(Context context){
-        doStart(context, R.raw.game_yes, false);
+        doStart(context, R.raw.game_next, false);
     }
 
     /**

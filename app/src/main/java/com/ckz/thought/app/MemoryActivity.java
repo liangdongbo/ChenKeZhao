@@ -109,7 +109,7 @@ public class MemoryActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case TIMEOUT://超时，记录数据
-                    musicUtils.gameOverMusic(MemoryActivity.this);
+                    musicUtils.gameOverMusic2(MemoryActivity.this);
                     oTimeout++;//超时
                     score--;//减分
                     oCount++;//次数
@@ -186,7 +186,7 @@ public class MemoryActivity extends AppCompatActivity {
                     if(timerUtils.getTimer()==null){
                         timerUtils.setTimeout(setTimeout,TIMEOUT);//记录超时
                     }
-                    musicUtils.gameBtnMusic(MemoryActivity.this);
+                    musicUtils.gameBtnMusic2(MemoryActivity.this);
                     int length = btns.length;
                     for(int i=0;i<length;i++){
                         if(v.equals(btns[i])){
@@ -204,7 +204,7 @@ public class MemoryActivity extends AppCompatActivity {
                             if(Long.parseLong(recordResult)>Long.parseLong(result)){
                                 b= true;
                                 //失败
-                                musicUtils.gameOverMusic(MemoryActivity.this);
+                                musicUtils.gameOverMusic2(MemoryActivity.this);
                                 Toast.makeText(MemoryActivity.this, "回家练练吧  ◎＿◎", Toast.LENGTH_SHORT).show();
                                 score--;//减分
                             }
@@ -322,6 +322,8 @@ public class MemoryActivity extends AppCompatActivity {
 
 
         musicUtils = new MusicUtils();
+        //背景音乐
+        musicUtils.gameBackMusic2(MemoryActivity.this);
 
         //初始化记录控件
         app_memory_score = (TextView) findViewById(R.id.app_memory_score);
@@ -339,6 +341,17 @@ public class MemoryActivity extends AppCompatActivity {
         super.onStart();
         //欢迎页面
         iv_back.setBackground(res.getDrawable(R.drawable.back1));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        musicUtils.doStop();
     }
 
     /**
@@ -436,4 +449,5 @@ public class MemoryActivity extends AppCompatActivity {
             return view;
         }
     }
+
 }
