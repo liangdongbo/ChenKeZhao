@@ -334,13 +334,14 @@ public class MemoryActivity extends AppCompatActivity {
         app_memory_recordInput.setOnTouchListener(new BtnTouchListener());
 
         app_memory_rank = (TextView) findViewById(R.id.app_memory_rank);
+        //欢迎页面
+        iv_back.setBackground(res.getDrawable(R.drawable.back1));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        //欢迎页面
-        iv_back.setBackground(res.getDrawable(R.drawable.back1));
+        refurbishRecord();
     }
 
     @Override
