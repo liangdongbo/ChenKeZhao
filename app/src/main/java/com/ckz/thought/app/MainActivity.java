@@ -16,6 +16,8 @@ import com.ckz.thought.utils.BitmapUtils;
 /**
  * 程序的主页面
  * 菜单功能跳转页
+ * 功能介绍：
+ * 这是主菜单页面，没什么好说的
  */
 public class MainActivity extends AppCompatActivity {
 
