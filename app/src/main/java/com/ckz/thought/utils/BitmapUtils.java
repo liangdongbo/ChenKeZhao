@@ -262,7 +262,7 @@ public class BitmapUtils {
             Bitmap b = Bitmap.createBitmap(bitmap, j * x, i > 4 ? y : 0, x, y);
             b = setBitmapPixel(b,0,0,x,y,btnColors[i]);
             map.put("bitmap",b);
-            map.put("number",(i+1));
+            map.put("number",(i+1)==10?0:(i+1));
             list.add(map);
 
         }

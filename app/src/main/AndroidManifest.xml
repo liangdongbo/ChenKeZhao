@@ -10,7 +10,7 @@
         android:theme="@style/MyAppTheme">
 
         <activity
-            android:name=".app.MemoryActivity">
+            android:name=".app.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".app.MainActivity">
+        <activity android:name=".app.MemoryActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

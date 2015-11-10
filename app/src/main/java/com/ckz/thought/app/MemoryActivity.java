@@ -83,6 +83,7 @@ public class MemoryActivity extends AppCompatActivity {
     private TextView app_memory_count;//获取操作次数控件
     private TextView app_memory_timeOut;//获取超时控件
     private TextView app_memory_recordInput;//获取显示结果控件
+    private TextView app_memory_rank;// 当前等级
 
     private MusicUtils musicUtils;
 
@@ -105,7 +106,7 @@ public class MemoryActivity extends AppCompatActivity {
                     timerTime.setTimeout(0, second, LOOP);
                     break;
                 case LOOP ://循环处理
-                    int s = 3;
+                    int s = setTimeout;
                     btn_memory_end.setClickable(false);
                     if(second>s){
                         second = second-s;
@@ -134,6 +135,7 @@ public class MemoryActivity extends AppCompatActivity {
                     //获取正确结果
                     int l = resultArray.length;
                     for(int j=0;j<l;j++){
+                        //Log.i(TAG,resultArray[j]+".............................");
                         result+=resultArray[j];
                     }
                     break;
@@ -173,7 +175,7 @@ public class MemoryActivity extends AppCompatActivity {
                         if(v.equals(btns[i])){
                             recordResult+=(long) btnNum[i];
                             //是否一致
-                            Toast.makeText(MemoryActivity.this, result +"=="+ recordResult, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(MemoryActivity.this, result +"=="+ recordResult, Toast.LENGTH_SHORT).show();
                             boolean b= false;//是否结束
                             if(recordResult.equals(result)){
                                 b = true;
@@ -299,6 +301,8 @@ public class MemoryActivity extends AppCompatActivity {
         app_memory_recordInput = (TextView) findViewById(R.id.app_memory_recordInput);
         //按下，显示结果，提起，隐藏
         app_memory_recordInput.setOnTouchListener(new BtnTouchListener());
+
+        app_memory_rank = (TextView) findViewById(R.id.app_memory_rank);
     }
 
     @Override
@@ -315,6 +319,34 @@ public class MemoryActivity extends AppCompatActivity {
         flag = b;
         count = n;
         if(flag){
+            String rank = "";
+            //等级设置
+            if(score>=10){
+                count = 3;
+                setTimeout=2;
+                rank="小样1";
+            }else if(score>=20){
+                count = 4;
+                setTimeout=2;
+                rank="小样2";
+            }else if(score>=30){
+                count = 5;
+                setTimeout=3;
+                rank="小样3";
+            }else if(score>=40){
+                count = 6;
+                setTimeout=3;
+                rank="小样4";
+            }else if(score>=50){
+                count = 7;
+                setTimeout=4;
+                rank="小样5+";
+            }else{//乳化
+                count = 2;
+                setTimeout=2;
+                rank="小样0";
+            }
+            app_memory_rank.setText("等级："+rank);
             resultArray = new int[count];
         }
         if(!flag){

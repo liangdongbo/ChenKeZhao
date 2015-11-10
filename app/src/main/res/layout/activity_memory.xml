@@ -66,6 +66,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="10sp"
                 android:textColor="#ff0000"/>
+            <TextView
+                android:id="@+id/app_memory_rank"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_margin="0sp"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="#ff0000"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
