@@ -364,30 +364,35 @@ public class MemoryActivity extends AppCompatActivity {
         if(flag){
             String rank = "";
             //等级设置
-            if(score>=10){
-                count = 3;
-                setTimeout=2;
-                rank="小样1";
-            }else if(score>=20){
-                count = 4;
-                setTimeout=2;
-                rank="小样2";
-            }else if(score>=30){
-                count = 5;
-                setTimeout=3;
-                rank="小样3";
+            if(score>=50){
+                count = 9;
+                setTimeout=4;
+                rank="小样5+";
             }else if(score>=40){
                 count = 6;
                 setTimeout=3;
                 rank="小样4";
-            }else if(score>=50){
-                count = 9;
-                setTimeout=4;
-                rank="小样5+";
+            }else if(score>=30){
+                count = 5;
+                setTimeout=3;
+                rank="小样3";
+            }else if(score>=20){
+                count = 4;
+                setTimeout=2;
+                rank="小样2";
+            }else if(score>=10){
+                count = 3;
+                setTimeout=2;
+                rank="小样1";
             }else{//乳化
                 count = 2;
                 setTimeout=3;
                 rank="小样0";
+            }
+
+            String temp = app_memory_rank.getText().toString();
+            if(!(("等级："+rank).equals(temp)) && !("小样0".equals(rank))){
+                Toast.makeText(MemoryActivity.this, "恭喜你，升级了", Toast.LENGTH_SHORT).show();
             }
             app_memory_rank.setText("等级："+rank);
             resultArray = new int[count];
