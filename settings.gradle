@@ -1,1 +1,1 @@
-include ':thought'
+include ':thought', ':crawler'
