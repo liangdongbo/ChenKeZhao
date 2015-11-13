@@ -1,8 +1,10 @@
 package com.ckz.thought.app;
 
+import android.animation.ObjectAnimator;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ckz.thought.R;
+import com.ckz.thought.entity.AnimationView;
 
 /**
  * Created by kaiser on 2015/10/27.
@@ -24,12 +27,13 @@ public class ReactionActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reaction);
 
-        ImageView iv = (ImageView) findViewById(R.id.ivxx);
+        ImageView imgShow = (ImageView) findViewById(R.id.ivxx);
 
-        Animation translateAnimation = AnimationUtils.loadAnimation(this,R.anim.translate);
-        iv.setAnimation(translateAnimation);
-
-
+        //属性动画
+        ObjectAnimator animator=ObjectAnimator.ofInt(new AnimationView(imgShow),"width", 10);
+        animator.setDuration(3000);//设置动画持续的时间
+        animator.setRepeatCount(10);//设置动画重复的次数
+        animator.start();//开启动画
 
     }
 
