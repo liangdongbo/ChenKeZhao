@@ -1,6 +1,8 @@
 package com.ckz.thought.app;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,10 +32,28 @@ public class ReactionActivity extends AppCompatActivity{
         ImageView imgShow = (ImageView) findViewById(R.id.ivxx);
 
         //属性动画
-        ObjectAnimator animator=ObjectAnimator.ofInt(new AnimationView(imgShow),"width", 10);
-        animator.setDuration(3000);//设置动画持续的时间
-        animator.setRepeatCount(10);//设置动画重复的次数
-        animator.start();//开启动画
+        /*//同步动画设计
+        PropertyValuesHolder p1 = PropertyValuesHolder.ofFloat("translationX", 0, 360F);
+        PropertyValuesHolder p2 = PropertyValuesHolder.ofFloat("translationY", 0, 360F);
+        PropertyValuesHolder p3 = PropertyValuesHolder.ofFloat("rotation", 0, 360F);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(imgShow, p1, p2, p3);
+        objectAnimator.setDuration(3000);//持续时间
+        objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);//次数
+        objectAnimator.start();*/
+
+        //通过AnimatiorSet来设计同步执行的多个属性动画
+        ObjectAnimator animator1 = ObjectAnimator.ofFloat(imgShow, "translationX", 0F, 360F);//X轴平移旋转
+        ObjectAnimator animator2 = ObjectAnimator.ofFloat(imgShow, "translationY", 0F, 360F);//Y轴平移旋转
+        ObjectAnimator animator3 = ObjectAnimator.ofFloat(imgShow, "rotation", 0F, 360F);//360度旋转
+        AnimatorSet set = new AnimatorSet();
+        //set.playSequentially(animator1, animator2, animator3);//分步执行
+        //set.playTogether(animator1, animator2, animator3);//同步执行
+        //属性动画的执行顺序控制
+        // 先同步执行动画animator2和animator3,然后再执行animator1
+        set.play(animator3).with(animator1);
+        set.play(animator2).after(animator3);
+        set.setDuration(1000);
+        set.start();
 
     }
 
