@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.ckz.crawler.R;
 import com.ckz.crawler.ui.fragment.FindFragment;
@@ -20,10 +22,15 @@ import com.ckz.crawler.ui.fragment.TopicFragment;
 public class MainActivity extends AppCompatActivity implements FindFragment.OnFragmentInteractionListener {
 
     //主页面按钮
-    private ImageButton btn_main_home;
-    private ImageButton btn_main_topic;
-    private ImageButton btn_main_find;
-    private ImageButton btn_main_my;
+    private LinearLayout btn_main_home;
+    private LinearLayout btn_main_topic;
+    private LinearLayout btn_main_find;
+    private LinearLayout btn_main_my;
+    //按钮图标
+    private ImageView icon_btn_main_home;
+    private ImageView icon_btn_main_topic;
+    private ImageView icon_btn_main_find;
+    private ImageView icon_btn_main_my;
 
     private HomeFragment homeFragment;//首页碎片
     private TopicFragment topicFragment;//话题碎片
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
         homeFragment = new HomeFragment();
         transaction.replace(R.id.main_container, homeFragment);//替换当前的碎片
         transaction.commit();//提交到activity
+        icon_btn_main_home.setBackground(res.getDrawable(R.mipmap.home_tabbar_press));
 
     }
 
@@ -88,10 +96,14 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
      * 找到所以的View资源句柄
      */
     private void findAllView(){
-        btn_main_home = (ImageButton) findViewById(R.id.btn_main_home);
-        btn_main_topic = (ImageButton) findViewById(R.id.btn_main_topic);
-        btn_main_find = (ImageButton) findViewById(R.id.btn_main_find);
-        btn_main_my = (ImageButton) findViewById(R.id.btn_main_my);
+        btn_main_home = (LinearLayout) findViewById(R.id.btn_main_home);
+        btn_main_topic = (LinearLayout) findViewById(R.id.btn_main_topic);
+        btn_main_find = (LinearLayout) findViewById(R.id.btn_main_find);
+        btn_main_my = (LinearLayout) findViewById(R.id.btn_main_my);
+        icon_btn_main_home = (ImageView) findViewById(R.id.icon_btn_main_home);
+        icon_btn_main_topic = (ImageView) findViewById(R.id.icon_btn_main_topic);
+        icon_btn_main_find = (ImageView) findViewById(R.id.icon_btn_main_find);
+        icon_btn_main_my = (ImageView) findViewById(R.id.icon_btn_main_my);
     }
 
     /**
@@ -129,23 +141,23 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
                 FragmentManager fm = getSupportFragmentManager();
                 FragmentTransaction transaction = fm.beginTransaction();//开启事务
                 switch (v.getId()){
-                    case R.id.btn_main_home ://首页
-                        btn_main_home.setBackground(res.getDrawable(R.mipmap.home_tabbar_press));
+                    case R.id.btn_main_home://首页
+                        icon_btn_main_home.setBackground(res.getDrawable(R.mipmap.home_tabbar_press));
                         homeFragment = new HomeFragment();
                         transaction.replace(R.id.main_container, homeFragment);//替换当前的碎片
                         break;
                     case R.id.btn_main_topic ://话题
-                        btn_main_topic.setBackground(res.getDrawable(R.mipmap.topic_tabbar_press));
+                        icon_btn_main_topic.setBackground(res.getDrawable(R.mipmap.topic_tabbar_press));
                         topicFragment = new TopicFragment();
                         transaction.replace(R.id.main_container, topicFragment);//替换当前的碎片
                         break;
                     case R.id.btn_main_find ://发现
-                        btn_main_find.setBackground(res.getDrawable(R.mipmap.discover_tabbar_press));
+                        icon_btn_main_find.setBackground(res.getDrawable(R.mipmap.discover_tabbar_press));
                         findFragment = new FindFragment();
                         transaction.replace(R.id.main_container,findFragment);//替换当前的碎片
                         break;
                     case R.id.btn_main_my ://我的
-                        btn_main_my.setBackground(res.getDrawable(R.mipmap.mine_tabbar_press));
+                        icon_btn_main_my.setBackground(res.getDrawable(R.mipmap.mine_tabbar_press));
                         myFragment = new MyFragment();
                         transaction.replace(R.id.main_container, myFragment);//替换当前的碎片
                         break;
@@ -155,18 +167,22 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
             }
             
             if(event.getAction()==MotionEvent.ACTION_UP){//弹起
+                icon_btn_main_home.setBackground(res.getDrawable(R.mipmap.home_tabbar));
+                icon_btn_main_topic.setBackground(res.getDrawable(R.mipmap.topic_tabbar));
+                icon_btn_main_find.setBackground(res.getDrawable(R.mipmap.discover_tabbar));
+                icon_btn_main_my.setBackground(res.getDrawable(R.mipmap.mine_tabbar));
                 switch (v.getId()){
                     case R.id.btn_main_home ://首页
-                        btn_main_home.setBackground(res.getDrawable(R.mipmap.home_tabbar));
+                        icon_btn_main_home.setBackground(res.getDrawable(R.mipmap.home_tabbar_press));
                         break;
                     case R.id.btn_main_topic ://话题
-                        btn_main_topic.setBackground(res.getDrawable(R.mipmap.topic_tabbar));
+                        icon_btn_main_topic.setBackground(res.getDrawable(R.mipmap.topic_tabbar_press));
                         break;
                     case R.id.btn_main_find ://发现
-                        btn_main_find.setBackground(res.getDrawable(R.mipmap.discover_tabbar));
+                        icon_btn_main_find.setBackground(res.getDrawable(R.mipmap.discover_tabbar_press));
                         break;
                     case R.id.btn_main_my ://我的
-                        btn_main_my.setBackground(res.getDrawable(R.mipmap.mine_tabbar));
+                        icon_btn_main_my.setBackground(res.getDrawable(R.mipmap.mine_tabbar_press));
                         break;
 
                 }
@@ -174,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
             return false;
         }
     }
+
 
 
 
