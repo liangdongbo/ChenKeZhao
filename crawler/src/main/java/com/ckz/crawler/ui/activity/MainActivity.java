@@ -15,7 +15,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(findViewById(R.id.main_container)!=null){
+        /*if(findViewById(R.id.main_container)!=null){
             if (savedInstanceState != null) {
                 return;
             }
@@ -30,6 +30,6 @@ public class MainActivity extends FragmentActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.main_container, mainFragment).commit();
 
 
-        }
+        }*/
     }
 }
