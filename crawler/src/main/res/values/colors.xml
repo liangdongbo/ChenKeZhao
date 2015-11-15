@@ -3,5 +3,5 @@
     <color name="colorPrimary">#3e51bc</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="foot_bar">#eeeeee</color>
+    <color name="colorFootBar">#d4d4d4</color>
 </resources>

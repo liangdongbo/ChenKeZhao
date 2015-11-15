@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:background="@color/foot_bar">
+        android:background="@color/colorFootBar">
 
         <LinearLayout
             android:layout_width="0dp"
