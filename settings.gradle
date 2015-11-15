@@ -1,1 +1,1 @@
-include ':thought', ':crawler'
+include ':thought', ':crawler', ':library', ':librarysample', ':pulltorefreshlistfragment', ':pulltorefreshviewpager'
