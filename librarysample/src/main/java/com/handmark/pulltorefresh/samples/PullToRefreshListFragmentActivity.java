@@ -12,8 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *******************************************************************************//*
-
+ *******************************************************************************/
 package com.handmark.pulltorefresh.samples;
 
 import java.util.Arrays;
@@ -38,9 +37,7 @@ public final class PullToRefreshListFragmentActivity extends FragmentActivity im
 	private PullToRefreshListFragment mPullRefreshListFragment;
 	private PullToRefreshListView mPullRefreshListView;
 
-	*/
-/** Called when the activity is first created. *//*
-
+	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -105,4 +102,3 @@ public final class PullToRefreshListFragmentActivity extends FragmentActivity im
 			"Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
 			"Allgauer Emmentaler" };
 }
-*/

@@ -61,8 +61,8 @@ public class LauncherActivity extends ListActivity {
 				intent = new Intent(this, PullToRefreshViewPagerActivity.class);
 				break;
 			case 7:
-				//intent = new Intent(this, PullToRefreshListFragmentActivity.class);
-				intent=null;
+				intent = new Intent(this, PullToRefreshListFragmentActivity.class);
+				//intent=null;
 				break;
 			case 8:
 				intent = new Intent(this, PullToRefreshWebView2Activity.class);
