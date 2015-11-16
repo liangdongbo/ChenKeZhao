@@ -1,29 +1,18 @@
 package com.ckz.crawler.ui.fragment;
 
-import android.app.ActionBar;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ckz.crawler.R;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.handmark.pulltorefresh.library.extras.SoundPullEventListener;
 import com.lynnchurch.horizontalscrollmenu.BaseAdapter;
 import com.lynnchurch.horizontalscrollmenu.HorizontalScrollMenu;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -40,7 +29,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_home, container, false);
         initView();
@@ -55,7 +43,7 @@ public class HomeFragment extends Fragment {
 
     class MenuAdapter extends BaseAdapter {
         String[] names = new String[]
-                {"菜单一", "菜单二", "菜单三", "菜单四", "菜单五", "菜单六", "菜单七"};
+                {"虎嗅-弄创潮","虎嗅-早晚见","推酷-SEO","推酷-交互设置","推酷-创业", "推酷-O2O", "推酷-软件构架", "推酷-产品设计"};
 
         @Override
         public List<String> getMenuItems() {
