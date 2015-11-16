@@ -3,10 +3,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.lynnchurch.horizontalscrollmenu.HorizontalScrollMenu
+        android:id="@+id/hsm_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="首页" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
