@@ -5,17 +5,13 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="D:\0Develop\Android\Android Studio\gradle\gradle-2.4" />
-        <option name="gradleJvm" value="1.8" />
+        <option name="gradleHome" value="D:\Android\Android Studio\gradle\gradle-2.4" />
+        <option name="gradleJvm" value="1.7" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/crawler" />
-            <option value="$PROJECT_DIR$/library" />
-            <option value="$PROJECT_DIR$/librarysample" />
-            <option value="$PROJECT_DIR$/pulltorefreshlistfragment" />
-            <option value="$PROJECT_DIR$/pulltorefreshviewpager" />
-            <option value="$PROJECT_DIR$/thought" />
+            <option value="$PROJECT_DIR$/horizontalscrollmenu" />
+            <option value="$PROJECT_DIR$/horizontalscrollmenusample" />
           </set>
         </option>
       </GradleProjectSettings>
