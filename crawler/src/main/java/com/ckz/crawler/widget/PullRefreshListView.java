@@ -1,22 +1,28 @@
 package com.ckz.crawler.widget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.ckz.crawler.R;
+import com.ckz.crawler.ui.activity.SpiderContentShowActivity;
 import com.ckz.crawler.utils.SpiderUtils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -72,6 +78,21 @@ public class PullRefreshListView {
             @Override
             public void onLastItemVisible() {
                 Toast.makeText(context, "哎哟，被你看光了", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mPullRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {//列表点击事件
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //View v = View.inflate(context,R.layout.activity_activity_adapter_item,null);
+                TextView tv_link = (TextView)view.findViewById(R.id.spider_item_link);
+                String link = (String) tv_link.getText();
+
+                //调用WebView的Activity
+                Intent intent = new Intent(context,SpiderContentShowActivity.class);
+                Bundle bundle  = new Bundle ();
+                bundle.putString("link",link);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
         return fl_content;

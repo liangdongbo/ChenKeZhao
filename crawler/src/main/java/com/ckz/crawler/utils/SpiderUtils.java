@@ -166,12 +166,14 @@ public class SpiderUtils{
             }else{
                 mImageView.setVisibility(View.GONE);//隐藏 并且不占用界面空间
             }
+            TextView link = (TextView) v.findViewById(R.id.spider_item_link);
             TextView title = (TextView) v.findViewById(R.id.spider_item_title);
             TextView time = (TextView) v.findViewById(R.id.spider_item_time);
             TextView content = (TextView) v.findViewById(R.id.spider_item_content);
             title.setText(article.getTitle());
             time.setText(article.getTime());
             content.setText(article.getSnapshoot());
+            link.setText(article.getHref());
             return v;
         }
     }

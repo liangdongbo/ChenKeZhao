@@ -9,7 +9,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_margin="5dp"
-        android:background="@drawable/ic_launcher"
+        android:background="@mipmap/loading_back"
         android:layout_alignParentLeft="true"/>
     <TextView
         android:id="@+id/spider_item_title"
@@ -39,4 +39,9 @@
         android:layout_marginTop="5sp"
         android:layout_marginBottom="5sp"
         android:text="2天前"/>
+    <TextView
+        android:id="@+id/spider_item_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
 </RelativeLayout>
