@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.ckz.crawler.R;
 import com.ckz.crawler.widget.PullRefreshListView;
@@ -98,9 +99,10 @@ public class HomeFragment extends Fragment {
                 }else{
                     category=1;
                 }
-                PullToRefreshListView listView = mPullRefreshListView.getRefreshListView(v, getActivity(),urls[i],tips[i],category);
+                //PullToRefreshListView listView = mPullRefreshListView.getRefreshListView(v, getActivity(),urls[i],tips[i],category);
+                FrameLayout frameLayout = mPullRefreshListView.getRefreshListView(v, getActivity(),urls[i],tips[i],category);
                 //添加到ListView集合
-                views.add(listView);
+                views.add(frameLayout);
                 mPullRefreshListViews.add(mPullRefreshListView);
                 /*
                 TextView tv = (TextView) v.findViewById(R.id.tv_content);

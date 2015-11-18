@@ -38,8 +38,8 @@ public class SpiderUtils{
     private List<Article> articles;//文章对象集合
     private Context context;
     private RequestQueue mVolleyQueue;
-    private View content_view;
     private Resources res;
+    private ImageView iv_loading;
 
     /**
      * 发送请求，显示数据块
@@ -47,14 +47,12 @@ public class SpiderUtils{
      * @param mVolleyQueue volley的请求队列对象
      * @param context 上下文
      */
-    public void getSpiderItem(String url,final PullToRefreshListView mPullRefreshListView,RequestQueue mVolleyQueue, final Context context, final int category){
+    public void getSpiderItem(View v,String url,final PullToRefreshListView mPullRefreshListView,RequestQueue mVolleyQueue, final Context context, final int category){
         this.mVolleyQueue = mVolleyQueue;
         this.context = context;
         this.res = context.getResources();
-
-        content_view = LayoutInflater.from(context).inflate(R.layout.content_view, null);
-        content_view.findViewById(R.id.loading);
-        content_view.setVisibility(View.VISIBLE);
+        iv_loading = (ImageView) v.findViewById(R.id.loading);
+        iv_loading.setVisibility(View.VISIBLE);
         //使用volley发送StringRequest请求--------------------开始
         MyStringRequest stringRequest = new MyStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -84,9 +82,9 @@ public class SpiderUtils{
                 mPullRefreshListView.setAdapter(mAdapter);
                 actualListView.setAdapter(mAdapter);//设置适配器
                 mAdapter.notifyDataSetChanged();//更新数据
+                iv_loading.setVisibility(View.INVISIBLE);
                 // Call onRefreshComplete when the list has been refreshed.
                 mPullRefreshListView.onRefreshComplete();//完成刷新，关闭刷新动画
-                content_view.setVisibility(View.INVISIBLE);
             }
         },new Response.ErrorListener(){//请求失败
             @Override
