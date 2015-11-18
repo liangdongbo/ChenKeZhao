@@ -1,7 +1,9 @@
 package com.ckz.crawler.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,6 +38,8 @@ public class SpiderUtils{
     private List<Article> articles;//文章对象集合
     private Context context;
     private RequestQueue mVolleyQueue;
+    private View content_view;
+    private Resources res;
 
     /**
      * 发送请求，显示数据块
@@ -46,6 +50,11 @@ public class SpiderUtils{
     public void getSpiderItem(String url,final PullToRefreshListView mPullRefreshListView,RequestQueue mVolleyQueue, final Context context, final int category){
         this.mVolleyQueue = mVolleyQueue;
         this.context = context;
+        this.res = context.getResources();
+
+        content_view = LayoutInflater.from(context).inflate(R.layout.content_view, null);
+        content_view.findViewById(R.id.loading);
+        content_view.setVisibility(View.VISIBLE);
         //使用volley发送StringRequest请求--------------------开始
         MyStringRequest stringRequest = new MyStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -77,6 +86,7 @@ public class SpiderUtils{
                 mAdapter.notifyDataSetChanged();//更新数据
                 // Call onRefreshComplete when the list has been refreshed.
                 mPullRefreshListView.onRefreshComplete();//完成刷新，关闭刷新动画
+                content_view.setVisibility(View.INVISIBLE);
             }
         },new Response.ErrorListener(){//请求失败
             @Override
