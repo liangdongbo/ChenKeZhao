@@ -87,4 +87,22 @@ public class HtmlParse {
         }
         return results;
     }
+
+    /**
+     * 根据html，获取虎嗅或推酷正文内容
+     * @param html
+     * @return
+     */
+    public String getContent(String html){
+        Document doc = Jsoup.parse(html);
+        String str="";
+        Elements content1 =  doc.select("div[class=article-wrap]");//获取虎嗅正文元素
+        Elements content2 = doc.getElementsByClass("contant");//获取推酷正文元素
+        if (content1.size()!=0){
+            str=content1.html();
+        }else if (content2.size()!=0){
+            str = content2.html();
+        }
+        return str;
+    }
 }

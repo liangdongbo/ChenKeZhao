@@ -31,7 +31,7 @@ public class MyStringRequest extends StringRequest{
         // TODO Auto-generated method stub
         String str = null;
         try {
-            str = new String(response.data,"utf-8");
+            str = new String(response.data,"UTF-8");
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

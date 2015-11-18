@@ -3,6 +3,8 @@ package com.ckz.crawler.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +24,17 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
 import com.ckz.crawler.R;
 import com.ckz.crawler.entity.Article;
 import com.ckz.crawler.network.MyStringRequest;
+import com.ckz.crawler.ui.activity.SpiderContentShowActivity;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.logging.LogRecord;
 
 /**
  * Created by win7 on 2015/11/17.
@@ -39,16 +44,22 @@ public class SpiderUtils{
     private Context context;
     private RequestQueue mVolleyQueue;
     private Resources res;
-    private ImageView iv_loading;
+    private  ImageView iv_loading;
+    private String content_html = "";
 
+    public String getCcontext(){
+        return content_html;
+    }
     /**
      * 发送请求，显示数据块
      * @param mPullRefreshListView 下拉的View对象控件
-     * @param mVolleyQueue volley的请求队列对象
      * @param context 上下文
      */
-    public void getSpiderItem(View v,String url,final PullToRefreshListView mPullRefreshListView,RequestQueue mVolleyQueue, final Context context, final int category){
-        this.mVolleyQueue = mVolleyQueue;
+    public void getSpiderItem(View v,String url,final PullToRefreshListView mPullRefreshListView, final Context context, final int category){
+
+        if(mVolleyQueue==null){
+            mVolleyQueue = Volley.newRequestQueue(context);//请求队列
+        }
         this.context = context;
         this.res = context.getResources();
         iv_loading = (ImageView) v.findViewById(R.id.loading);
@@ -109,7 +120,7 @@ public class SpiderUtils{
                 } else if( error instanceof NoConnectionError) {
                     message="链接异常";
                 } else if (error instanceof TimeoutError) {
-                    message="链接超时";
+                    message="请求超时";
                 }
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
@@ -177,5 +188,55 @@ public class SpiderUtils{
             return v;
         }
     }
+
+    /**
+     * 爬虫正文
+     * @param url
+     * @param context
+     */
+    public void getSpiderConten(String url, final Context context){
+        if(mVolleyQueue==null){
+            mVolleyQueue = Volley.newRequestQueue(context);//请求队列
+        }
+        this.context = context;
+        this.res = context.getResources();
+        //使用volley发送StringRequest请求--------------------开始
+        MyStringRequest stringRequest = new MyStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response){//请求成功
+                byte[] b = response.getBytes(Charset.forName("UTF-8"));
+                final String html = new String(b);
+                content_html = new HtmlParse().getContent(html);
+                Message msg  = new Message();
+                msg.what= SpiderContentShowActivity.LOAD_SUCCEED;
+                SpiderContentShowActivity.MyHandler.sendMessage(msg);
+            }
+        },new Response.ErrorListener(){//请求失败
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String message = "未定义";
+                if( error instanceof NetworkError) {
+                    message="网络链接异常，请检查网络配置";
+                } else if( error instanceof ServerError) {
+                    message="服务请求异常";
+                } else if( error instanceof AuthFailureError) {
+                    message="401 && 403";
+                } else if( error instanceof ParseError) {
+                    message = "解析错误";
+                } else if( error instanceof NoConnectionError) {
+                    message="链接异常";
+                } else if (error instanceof TimeoutError) {
+                    message="请求超时";
+                }
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+        stringRequest.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        stringRequest.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36");
+        mVolleyQueue.add(stringRequest);//添加到请求队列
+        //使用volley发送StringRequest请求--------------------结束
+    }
+
+
 
 }
