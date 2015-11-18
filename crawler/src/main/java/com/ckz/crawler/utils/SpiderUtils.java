@@ -21,21 +21,19 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.ckz.crawler.R;
-import com.ckz.crawler.entity.HuXiu;
+import com.ckz.crawler.entity.Article;
 import com.ckz.crawler.network.MyStringRequest;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.handmark.pulltorefresh.library.extras.SoundPullEventListener;
 
+import java.net.MalformedURLException;
 import java.nio.charset.Charset;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by win7 on 2015/11/17.
  */
 public class SpiderUtils{
-    private List<HuXiu> huxius;//虎嗅对象集合
+    private List<Article> articles;//文章对象集合
     private Context context;
     private RequestQueue mVolleyQueue;
 
@@ -45,7 +43,7 @@ public class SpiderUtils{
      * @param mVolleyQueue volley的请求队列对象
      * @param context 上下文
      */
-    public void getSpiderItem(String url,final PullToRefreshListView mPullRefreshListView,RequestQueue mVolleyQueue, final Context context){
+    public void getSpiderItem(String url,final PullToRefreshListView mPullRefreshListView,RequestQueue mVolleyQueue, final Context context, final int category){
         this.mVolleyQueue = mVolleyQueue;
         this.context = context;
         //使用volley发送StringRequest请求--------------------开始
@@ -54,7 +52,12 @@ public class SpiderUtils{
             public void onResponse(String response){//请求成功
                 byte[] b = response.getBytes(Charset.forName("utf-8"));
                 String html = new String(b);
-                huxius = new HtmlParse().getHuXiuList(html);
+                //System.out.println(html);
+                if(category==0){//HuXiu
+                    articles = new HtmlParse().getHuXiuList(html);
+                }else{//Tuicool
+                    articles = new HtmlParse().getTuicoolList(html);
+                }
 
                 ListView actualListView = mPullRefreshListView.getRefreshableView();
 
@@ -88,7 +91,7 @@ public class SpiderUtils{
                     */
                 String message = "未定义";
                 if( error instanceof NetworkError) {
-                    message="网络链接异常，请检查网站配置";
+                    message="网络链接异常，请检查网络配置";
                 } else if( error instanceof ServerError) {
                     message="服务请求异常";
                 } else if( error instanceof AuthFailureError) {
@@ -118,7 +121,7 @@ public class SpiderUtils{
 
         @Override
         public int getCount() {
-            return huxius.size();
+            return articles.size();
         }
 
         @Override
@@ -133,30 +136,34 @@ public class SpiderUtils{
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            HuXiu huxiu = huxius.get(position);
+            Article article = articles.get(position);
             View v = View.inflate(context, R.layout.activity_activity_adapter_item, null);
             final ImageView mImageView = (ImageView) v.findViewById(R.id.spider_item_cover);
             mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
             //加载图片
-            String url =huxiu.getCover();
-            ImageRequest imgRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
-                @Override
-                public void onResponse(Bitmap response) {
-                    mImageView.setImageBitmap(response);
-                }
-            }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    mImageView.setImageResource(R.drawable.ic_launcher);
-                }
-            });
-            mVolleyQueue.add(imgRequest);
+            String url =article.getCover();
+            if(url!=""){
+                ImageRequest imgRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        mImageView.setImageBitmap(response);
+                    }
+                }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mImageView.setImageResource(R.drawable.ic_launcher);
+                    }
+                });
+                mVolleyQueue.add(imgRequest);
+            }else{
+                mImageView.setVisibility(View.GONE);//隐藏 并且不占用界面空间
+            }
             TextView title = (TextView) v.findViewById(R.id.spider_item_title);
             TextView time = (TextView) v.findViewById(R.id.spider_item_time);
             TextView content = (TextView) v.findViewById(R.id.spider_item_content);
-            title.setText(huxiu.getTitle());
-            time.setText(huxiu.getTime());
-            content.setText(huxiu.getSnapshoot());
+            title.setText(article.getTitle());
+            time.setText(article.getTime());
+            content.setText(article.getSnapshoot());
             return v;
         }
     }

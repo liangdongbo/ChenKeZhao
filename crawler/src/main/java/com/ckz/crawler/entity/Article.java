@@ -4,14 +4,14 @@ package com.ckz.crawler.entity;
  * Created by win7 on 2015/11/17.
  * 虎嗅标题列表
  */
-public class HuXiu {
+public class Article {
     private String title;//标题
     private String href;//标题链接
     private String snapshoot;//内容快照
     private String cover;//封面
     private String time;//发布时间
 
-    public HuXiu(String title, String href, String snapshoot, String cover, String time) {
+    public Article(String title, String href, String snapshoot, String cover, String time) {
         this.title = title;
         this.href = href;
         this.snapshoot = snapshoot;
@@ -59,10 +59,4 @@ public class HuXiu {
         this.time = time;
     }
 
-    @Override
-    public String toString() {
-        return "HuXiu{" +
-                "title='" + title + '\'' +
-                '}';
-    }
 }

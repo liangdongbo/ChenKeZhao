@@ -75,6 +75,7 @@ public class HomeFragment extends Fragment {
                 "http://www.tuicool.com/topics/11000148",
                 "http://www.tuicool.com/topics/10500004"
         };
+        int category = 0;//0表示虎嗅、1表示推酷
         @Override
         public List<String> getMenuItems() {
             // TODO Auto-generated method stub
@@ -92,7 +93,12 @@ public class HomeFragment extends Fragment {
             for (int i=0;i<length;i++) {
                 View v = LayoutInflater.from(getActivity()).inflate(R.layout.content_view, null);
                 PullRefreshListView mPullRefreshListView = new PullRefreshListView();
-                PullToRefreshListView listView = mPullRefreshListView.getRefreshListView(v, getActivity(),urls[i],tips[i]);
+                if(i<4){
+                    category=0;
+                }else{
+                    category=1;
+                }
+                PullToRefreshListView listView = mPullRefreshListView.getRefreshListView(v, getActivity(),urls[i],tips[i],category);
                 //添加到ListView集合
                 views.add(listView);
                 mPullRefreshListViews.add(mPullRefreshListView);

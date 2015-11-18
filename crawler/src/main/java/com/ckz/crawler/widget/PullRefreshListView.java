@@ -27,6 +27,7 @@ public class PullRefreshListView {
     private RequestQueue mVolleyQueue;//请求队列
     private SpiderUtils spiderUtils;
     private String url;//爬虫网址
+    private int category;
 
 
     /**
@@ -35,10 +36,11 @@ public class PullRefreshListView {
      * @param context 上下文
      * @return PullToRefreshListView
      */
-    public PullToRefreshListView getRefreshListView(View v, final FragmentActivity context,String url, final String tip){
+    public PullToRefreshListView getRefreshListView(View v, final FragmentActivity context,String url, final String tip,int category){
         //初始化参数
         this.context = context;
         this.url = url;
+        this.category = category;
         mVolleyQueue = Volley.newRequestQueue(context);//请求队列
         spiderUtils = new SpiderUtils();
 
@@ -80,7 +82,7 @@ public class PullRefreshListView {
         @Override
         protected void onPostExecute(String[] result) {
             //请求并显示数据块
-            spiderUtils.getSpiderItem(url,mPullRefreshListView,mVolleyQueue,context);
+            spiderUtils.getSpiderItem(url,mPullRefreshListView,mVolleyQueue,context,category);
             super.onPostExecute(result);
         }
     }

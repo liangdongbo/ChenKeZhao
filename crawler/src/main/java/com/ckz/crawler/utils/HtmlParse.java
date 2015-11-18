@@ -1,6 +1,6 @@
 package com.ckz.crawler.utils;
 
-import com.ckz.crawler.entity.HuXiu;
+import com.ckz.crawler.entity.Article;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,8 +21,8 @@ public class HtmlParse {
      * @param html
      * @return
      */
-    public List<HuXiu> getHuXiuList(String html){
-        List<HuXiu> results = new ArrayList<HuXiu>();
+    public List<Article> getHuXiuList(String html){
+        List<Article> results = new ArrayList<Article>();
         Document doc = Jsoup.parse(html);
         Elements items =  doc.select("div[class=mod-b mod-art]");          //获取全部模块内容元素
         for(Element item:items){
@@ -40,7 +40,50 @@ public class HtmlParse {
 
             //快照内容
             Element content  = title.getElementsByClass("mob-sub").first();
-            results.add(new HuXiu(a.text(),href,content.text(),cover,time.text()));
+            results.add(new Article(a.text(),href,content.text(),cover,time.text()));
+        }
+        return results;
+    }
+
+    /**
+     * 推酷，获取文章项列表
+     * @return
+     */
+    public List<Article> getTuicoolList(String html){
+        List<Article> results = new ArrayList<Article>();
+        Document doc = Jsoup.parse(html);
+        Elements items =  doc.select("div[class=single_fake]");          //获取全部模块内容元素
+        for(Element item:items){
+            String cover_path="";
+            String title_str="";
+            String time_str="";
+            String href_str="";
+            String content_str="";
+            //获取每一个模块
+            //标题
+            Element a = item.getElementsByClass("article-list-title").first();
+            if(a!=null){
+                href_str = "http://www.tuicool.com"+a.attr("href");//内容url
+                title_str=a.text();
+            }
+            //发布时间
+            Element time = item.select("div[class=tip meta-tip]").first();
+            if(time!=null){
+                time_str=time.getElementsByTag("span").get(1).text();
+            }
+            //封面信息
+            Element head = item.getElementsByClass("article_thumb").first();
+            if(head!=null){
+                Element cover  = head.getElementsByTag("img").first();
+                cover_path=cover.attr("src");
+            }
+
+            //快照内容
+            Element content  = item.getElementsByClass("article_cut").first();
+            if(content!=null){
+                content_str=content.text();
+            }
+            results.add(new Article(title_str,href_str,content_str,cover_path,time_str));
         }
         return results;
     }
