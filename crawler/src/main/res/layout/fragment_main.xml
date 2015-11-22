@@ -1,10 +1,87 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="我是第一个fragment"/>
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/main_bar_line" />
+
+
+    <LinearLayout
+        android:id="@+id/main_bar_line"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorFootBar">
+
+        <LinearLayout
+            android:id="@+id/btn_main_home"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/icon_btn_main_home"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@mipmap/home_tabbar"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btn_main_topic"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/icon_btn_main_topic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@mipmap/topic_tabbar"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btn_main_find"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/icon_btn_main_find"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@mipmap/discover_tabbar"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btn_main_my"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/icon_btn_main_my"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@mipmap/mine_tabbar"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

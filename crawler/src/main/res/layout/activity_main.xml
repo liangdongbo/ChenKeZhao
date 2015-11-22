@@ -1,87 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <FrameLayout
-        android:id="@+id/main_container"
+    <include
+        layout="@layout/app_bar_main"
         android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_above="@+id/main_bar_line" />
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer"/>
 
-
-    <LinearLayout
-        android:id="@+id/main_bar_line"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorFootBar">
-
-        <LinearLayout
-            android:id="@+id/btn_main_home"
-            android:clickable="true"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/icon_btn_main_home"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@mipmap/home_tabbar"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/btn_main_topic"
-            android:clickable="true"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/icon_btn_main_topic"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@mipmap/topic_tabbar"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/btn_main_find"
-            android:clickable="true"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/icon_btn_main_find"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@mipmap/discover_tabbar"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/btn_main_my"
-            android:clickable="true"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/icon_btn_main_my"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@mipmap/mine_tabbar"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

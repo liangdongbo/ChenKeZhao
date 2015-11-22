@@ -3,12 +3,17 @@ package com.ckz.crawler.ui.activity;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -19,7 +24,7 @@ import com.ckz.crawler.ui.fragment.MyFragment;
 import com.ckz.crawler.ui.fragment.TopicFragment;
 
 
-public class MainActivity extends AppCompatActivity implements FindFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements FindFragment.OnFragmentInteractionListener,NavigationView.OnNavigationItemSelectedListener{
 
     //主页面按钮
     private LinearLayout btn_main_home;
@@ -39,8 +44,10 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
 
     private Resources res;//资源对象
 
+    private DrawerLayout drawer;//抽屉布局
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -66,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
 
 
         }*/
+
+        initDrawer();
+
+
     }
 
     /**
@@ -90,6 +101,25 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
 
         findAllView();//查找资源
         registerAllBtnListener();//按钮资源事件注册
+    }
+
+    /**
+     * 初始化抽屉
+     */
+    private void initDrawer(){
+        /*获取抽屉布局句柄*/
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        /*工具条*/
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        /*抽屉布局的开关句柄*/
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        /*导航视图*/
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     /**
@@ -201,9 +231,43 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
 
     }
 
+    /**
+     * 压背景的时候，处理事件
+     */
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+    /**
+     * 导航视图的菜单项被选时，处理相关事件
+     * @param item
+     * @return
+     */
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
+        if (id == R.id.nav_camara) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
 
+        } else if (id == R.id.nav_slideshow) {
 
+        } else if (id == R.id.nav_manage) {
 
+        } else if (id == R.id.nav_share) {
 
+        } else if (id == R.id.nav_send) {
+
+        }
+        //关闭抽屉
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }
