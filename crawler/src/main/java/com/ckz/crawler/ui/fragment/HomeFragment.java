@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.ckz.crawler.R;
 import com.ckz.crawler.widget.PullRefreshListView;
@@ -100,9 +101,9 @@ public class HomeFragment extends Fragment {
                     category=1;
                 }
                 //PullToRefreshListView listView = mPullRefreshListView.getRefreshListView(v, getActivity(),urls[i],tips[i],category);
-                FrameLayout frameLayout = mPullRefreshListView.getRefreshListView(v, getActivity(),urls[i],tips[i],category);
+                LinearLayout linearLayout = mPullRefreshListView.getRefreshListView(v, getActivity(),urls[i],tips[i],category);
                 //添加到ListView集合
-                views.add(frameLayout);
+                views.add(linearLayout);
                 mPullRefreshListViews.add(mPullRefreshListView);
                 /*
                 TextView tv = (TextView) v.findViewById(R.id.tv_content);
@@ -125,7 +126,6 @@ public class HomeFragment extends Fragment {
             /*Toast.makeText(getActivity(),
                     "内容页：" + (position + 1) + " 访问状态：" + visitStatus,
                     Toast.LENGTH_SHORT).show();*/
-
             if(flag){
                 mPullRefreshListViews.get(position).doDataTask();
             }

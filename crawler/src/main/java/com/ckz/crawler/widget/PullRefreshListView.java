@@ -41,7 +41,7 @@ public class PullRefreshListView {
     private SpiderUtils spiderUtils;
     private String url;//爬虫网址
     private int category;
-    private FrameLayout fl_content;
+    private LinearLayout fl_content;
     private View content_view;//pageView内容
 
     /**
@@ -50,14 +50,14 @@ public class PullRefreshListView {
      * @param context 上下文
      * @return PullToRefreshListView
      */
-    public FrameLayout getRefreshListView(View v, final FragmentActivity context,String url, final String tip,int category){
+    public LinearLayout getRefreshListView(View v, final FragmentActivity context,String url, final String tip,int category){
         //初始化参数
         this.context = context;
         this.url = url;
         this.category = category;
         this.content_view = v;
         spiderUtils = new SpiderUtils();
-        fl_content = (FrameLayout) v.findViewById(R.id.content_item);
+        fl_content = (LinearLayout) v.findViewById(R.id.content_item);
         mPullRefreshListView = (PullToRefreshListView) v.findViewById(R.id.pull_refresh_list);
         // Set a listener to be invoked when the list should be refreshed.监听下拉事件
         mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
