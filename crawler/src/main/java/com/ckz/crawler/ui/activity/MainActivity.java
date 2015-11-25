@@ -1,8 +1,13 @@
 package com.ckz.crawler.ui.activity;
 
+import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +27,9 @@ import com.ckz.crawler.ui.fragment.FindFragment;
 import com.ckz.crawler.ui.fragment.HomeFragment;
 import com.ckz.crawler.ui.fragment.MyFragment;
 import com.ckz.crawler.ui.fragment.TopicFragment;
+import com.ckz.crawler.utils.ShareUtils;
+
+import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity implements FindFragment.OnFragmentInteractionListener,NavigationView.OnNavigationItemSelectedListener{
@@ -45,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
     private Resources res;//资源对象
 
     private DrawerLayout drawer;//抽屉布局
+
+    private ShareUtils shareUtils;//分享工具包
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -75,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
         }*/
 
         initDrawer();
+
+        //初始化
+        shareUtils = new ShareUtils(MainActivity.this,getResources());
 
 
     }
@@ -221,11 +234,6 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
         }
     }
 
-
-
-
-
-
     @Override
     public void onFragmentInteraction(Uri uri) {
 
@@ -242,6 +250,7 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
             super.onBackPressed();
         }
     }
+
     /**
      * 导航视图的菜单项被选时，处理相关事件
      * @param item
@@ -255,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
 
         if (id == R.id.nav_camara) {
             // Handle the camera action
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -262,9 +272,12 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-
+            //分享ImageView组件单张图片
+            View  v = View.inflate(this,R.layout.nav_header_main,null);
+            ImageView siv = (ImageView) v.findViewById(R.id.imageView);
+            shareUtils.shareImageViewModule(siv);
         } else if (id == R.id.nav_send) {
-
+            shareUtils.sendText("这是一只爬虫，请好好养肥它.");
         }
         //关闭抽屉
         drawer.closeDrawer(GravityCompat.START);
