@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * Created by win7 on 2015/11/17.
+ * volley请求处理中文乱码
  */
 public class MyStringRequest extends StringRequest{
 

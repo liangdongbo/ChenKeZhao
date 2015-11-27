@@ -77,6 +77,26 @@ public class ShareUtils{
         context.startActivity(Intent.createChooser(shareIntent, res.getText(R.string.send_to)));
     }
 
+    /**
+     * 分享我个人信息
+     */
+    public void shareMyInformation(){
+        View  v = View.inflate(context,R.layout.nav_header_main,null);
+        ImageView siv = (ImageView) v.findViewById(R.id.imageView);
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        Drawable mDrawable = siv.getDrawable();
+        Bitmap mBitmap = ((BitmapDrawable)mDrawable).getBitmap();
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                mBitmap, "Image Description", null);
+        Uri uri = Uri.parse(path);
+        String text = "陈科肇/n/r18575612426@163.com";
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+        shareIntent.setType("image/*");
+        context.startActivity(Intent.createChooser(shareIntent, "陈科肇"));
+    }
+
 
     /**
      * 发送分享文字

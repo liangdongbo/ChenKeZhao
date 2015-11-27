@@ -60,36 +60,10 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         init();
-
         setDefaultFragment();
-
-        /*
-        //动态管理fragment
-        if(findViewById(R.id.main_container)!=null){
-            if (savedInstanceState != null) {
-                return;
-            }
-
-            //创建一个fragment
-            MainFragment mainFragment = new MainFragment();
-            mainFragment.setArguments(getIntent().getExtras());
-
-            //添加这个mainFragment到'fragment_container'LayoutFragment
-            //add这个fragment
-            //commit 提交这个fragment到当前的activity
-            getSupportFragmentManager().beginTransaction().add(R.id.main_container, mainFragment).commit();
-
-
-        }*/
-
         initDrawer();
-
-        //初始化
         shareUtils = new ShareUtils(MainActivity.this,getResources());
-
-
     }
 
     /**
@@ -109,9 +83,7 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
      * 初始化
      */
     private void init(){
-
         res = getResources();
-
         findAllView();//查找资源
         registerAllBtnListener();//按钮资源事件注册
     }
@@ -158,19 +130,6 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
         btn_main_find.setOnTouchListener(new BtnTouchListener());
         btn_main_my.setOnTouchListener(new BtnTouchListener());
     }
-
-
-    /**
-     * 按钮单击监听事件处理
-     */
-    private class BtnClickListener implements View.OnClickListener{
-
-        @Override
-        public void onClick(View v) {
-            
-        }
-    }
-
 
     /**
      * 按钮的触摸事件
@@ -273,11 +232,12 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
 
         } else if (id == R.id.nav_share) {
             //分享ImageView组件单张图片
-            View  v = View.inflate(this,R.layout.nav_header_main,null);
+          /*  View  v = View.inflate(this,R.layout.nav_header_main,null);
             ImageView siv = (ImageView) v.findViewById(R.id.imageView);
-            shareUtils.shareImageViewModule(siv);
+            shareUtils.shareImageViewModule(siv);*/
+            shareUtils.shareMyInformation();
         } else if (id == R.id.nav_send) {
-            shareUtils.sendText("这是一只爬虫，请好好养肥它.");
+            shareUtils.sendText("陈科肇\n18575612426@163.com");
         }
         //关闭抽屉
         drawer.closeDrawer(GravityCompat.START);
