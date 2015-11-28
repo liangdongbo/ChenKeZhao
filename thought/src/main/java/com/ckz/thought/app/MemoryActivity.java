@@ -368,24 +368,24 @@ public class MemoryActivity extends AppCompatActivity {
                 count = 9;
                 setTimeout=4;
                 rank="小样5+";
-            }else if(score>=40){
+            }else if(score>=30){
                 count = 6;
                 setTimeout=3;
                 rank="小样4";
-            }else if(score>=30){
+            }else if(score>=20){
                 count = 5;
                 setTimeout=3;
                 rank="小样3";
-            }else if(score>=20){
+            }else if(score>=10){
                 count = 4;
                 setTimeout=2;
                 rank="小样2";
-            }else if(score>=10){
-                count = 3;
+            }else if(score>=3){
+                count = 5;
                 setTimeout=2;
                 rank="小样1";
             }else{//乳化
-                count = 2;
+                count = 4;
                 setTimeout=3;
                 rank="小样0";
             }
