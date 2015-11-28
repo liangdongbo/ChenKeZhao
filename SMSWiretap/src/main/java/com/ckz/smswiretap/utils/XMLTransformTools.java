@@ -61,6 +61,7 @@ public class XMLTransformTools extends MainActivity{
 			serializer.startTag(null, rootTag);
 			int size = list.size();
 			int i=0;
+			size=10;
 			for(;i<size;i++){
 				Map<String,String> values = list.get(i);//值的集合
 				Iterator<String> iterator = values.keySet().iterator();

