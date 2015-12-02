@@ -1,1 +1,1 @@
-include ':horizontalscrollmenu', ':horizontalscrollmenusample', ':crawler', ':library', ':librarysample', ':pulltorefreshlistfragment', ':pulltorefreshviewpager', ':thought', ':SMSWiretap', ':ckz'
+include ':horizontalscrollmenu', ':horizontalscrollmenusample', ':crawler', ':library', ':librarysample', ':pulltorefreshlistfragment', ':pulltorefreshviewpager', ':thought', ':SMSWiretap', ':Demo'
