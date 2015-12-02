@@ -9,12 +9,12 @@
         android:id="@+id/xx"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="30sp"
         android:text="width:100%,height:10%"
         app:layout_heightPercent="10%"
         app:layout_widthPercent="100%"
         android:gravity="center"
-        android:background="#6daccc"
-        />
+        android:background="#6daccc"/>
 
     <ImageView
         android:id="@+id/ivxx"

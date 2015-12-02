@@ -2,19 +2,19 @@ package com.ckz.thought.app;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.support.v4.internal.view.SupportMenuItem;
+import android.support.v4.widget.SearchViewCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.ckz.thought.R;
-import com.ckz.thought.entity.AnimationView;
 
 /**
  * Created by kaiser on 2015/10/27.
@@ -28,6 +28,11 @@ public class ReactionActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reaction);
+
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);//通过Action Bar图标进行导航
+
 
         ImageView imgShow = (ImageView) findViewById(R.id.ivxx);
 
@@ -57,6 +62,36 @@ public class ReactionActivity extends AppCompatActivity{
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.reaction_activity, menu);
+        SupportMenuItem searchItem = (SupportMenuItem)menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        // 配置SearchView的属性
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_save:
+                Toast.makeText(this, "你点击了“保存”按键！", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_delete:
+                Toast.makeText(this, "你点击了“删除”按键！", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_call:
+                Toast.makeText(this, "你点击了“呼叫”按键！", Toast.LENGTH_SHORT).show();
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     protected void onStart() {
         super.onStart();

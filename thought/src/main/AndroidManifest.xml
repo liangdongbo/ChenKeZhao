@@ -9,16 +9,13 @@
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme">
 
-        <activity
-            android:name=".app.MainActivity">
+        <activity android:name=".app.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".app.GoActivity">
+        <activity android:name=".app.GoActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -30,7 +27,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".app.ReactionActivity">
+        <activity
+            android:name=".app.ReactionActivity"
+            android:theme="@style/AppTheme"
+            android:icon="@android:drawable/ic_menu_help"
+            android:label="actionbar">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
