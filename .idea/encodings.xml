@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/SMSWiretap/src/main/java/com/ckz/smswiretap/app/MainActivity.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/SMSWiretap/src/main/java/com/ckz/smswiretap/service/BootReceiver.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/SMSWiretap/src/main/java/com/ckz/smswiretap/service/SMSReceiver.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/SMSWiretap/src/main/java/com/ckz/smswiretap/service/SingletonWiretapService.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/SMSWiretap/src/main/java/com/ckz/smswiretap/service/StartService.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/SMSWiretap/src/main/java/com/ckz/smswiretap/service/Wiretap.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/SMSWiretap/src/main/java/com/ckz/smswiretap/utils/ServiceTools.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/SMSWiretap/src/main/java/com/ckz/smswiretap/utils/XMLTransformTools.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../ViewPagerIndicator-master" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../ViewPagerIndicator-master/library" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../ViewPagerIndicator-master/sample" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
