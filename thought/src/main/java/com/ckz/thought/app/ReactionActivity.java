@@ -56,7 +56,7 @@ public class ReactionActivity extends AppCompatActivity{
         // 先同步执行动画animator2和animator3,然后再执行animator1
         set.play(animator3).with(animator1);
         set.play(animator2).after(animator3);
-        set.setDuration(1000);
+        set.setDuration(5000);
         set.start();
 
     }
