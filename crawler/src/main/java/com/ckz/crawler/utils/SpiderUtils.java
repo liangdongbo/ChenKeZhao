@@ -170,7 +170,7 @@ public class SpiderUtils{
                 }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        mImageView.setImageResource(R.drawable.ic_launcher);
+                        mImageView.setImageResource(R.mipmap.ic_launcher);
                     }
                 });
                 mVolleyQueue.add(imgRequest);

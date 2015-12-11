@@ -1,43 +1,32 @@
-package com.ckz.crawler.widget;
+package com.ckz.crawler.ui.view;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.text.format.DateUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.ckz.crawler.R;
 import com.ckz.crawler.ui.activity.SpiderContentShowActivity;
 import com.ckz.crawler.utils.SpiderUtils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-import java.util.logging.LogRecord;
-
 /**
  * Created by win7 on 2015/11/16.
- * ListView下拉刷新
+ * 首页的内容视图
  */
-public class PullRefreshListView {
+public class HomeContentView {
 
-    private static final String TAG = PullRefreshListView.class.getSimpleName();
+    private static final String TAG = HomeContentView.class.getSimpleName();
     private Context context;
-    private PullToRefreshListView mPullRefreshListView;
+    private PullToRefreshListView mPullRefreshListView;//实现刷新的组件
     private SpiderUtils spiderUtils;
     private String url;//爬虫网址
     private int category;
@@ -50,15 +39,17 @@ public class PullRefreshListView {
      * @param context 上下文
      * @return PullToRefreshListView
      */
-    public LinearLayout getRefreshListView(View v, final FragmentActivity context,String url, final String tip,int category){
+    public LinearLayout getView(View v, final FragmentActivity context,String url, final String tip,int category){
         //初始化参数
         this.context = context;
         this.url = url;
         this.category = category;
         this.content_view = v;
+
         spiderUtils = new SpiderUtils();
         fl_content = (LinearLayout) v.findViewById(R.id.content_item);
         mPullRefreshListView = (PullToRefreshListView) v.findViewById(R.id.pull_refresh_list);
+
         // Set a listener to be invoked when the list should be refreshed.监听下拉事件
         mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
@@ -71,6 +62,7 @@ public class PullRefreshListView {
                 new GetDataTask().execute();
             }
         });
+
         // Add an end-of-list listener，下拉到列表的最低部时
         mPullRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
             @Override
@@ -78,7 +70,9 @@ public class PullRefreshListView {
                 Toast.makeText(context, "哎哟，被你看光了", Toast.LENGTH_SHORT).show();
             }
         });
-        mPullRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {//列表点击事件
+
+        //列表项点击事件
+        mPullRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //View v = View.inflate(context,R.layout.activity_activity_adapter_item,null);
@@ -93,26 +87,24 @@ public class PullRefreshListView {
                 context.startActivity(intent);
             }
         });
+
         return fl_content;
     }
 
     /**
      * 执行
      */
-    private class GetDataTask extends AsyncTask<Void, Void, String[]> {
-
+    private class GetDataTask extends AsyncTask<Void, Void, Void> {
         @Override
-        protected String[] doInBackground(Void... params) {
-            // Simulates a background job.
-            String[] mString = new String[]{""};
-            return mString;
+        protected Void doInBackground(Void... params) {
+            return null;
         }
 
         @Override
-        protected void onPostExecute(String[] result) {
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
             //请求并显示数据块
-            spiderUtils.getSpiderItem(content_view,url,mPullRefreshListView,context,category);
-            super.onPostExecute(result);
+            spiderUtils.getSpiderItem(content_view, url, mPullRefreshListView, context, category);
         }
     }
 

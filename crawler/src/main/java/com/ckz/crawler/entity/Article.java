@@ -2,7 +2,7 @@ package com.ckz.crawler.entity;
 
 /**
  * Created by win7 on 2015/11/17.
- * 虎嗅标题列表
+ * 文章信息
  */
 public class Article {
     private String title;//标题
