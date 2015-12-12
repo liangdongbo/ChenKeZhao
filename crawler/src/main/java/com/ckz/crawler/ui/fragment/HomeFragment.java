@@ -2,6 +2,7 @@ package com.ckz.crawler.ui.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.ckz.crawler.R;
 import com.ckz.crawler.ui.view.HomeContentView;
+import com.ckz.crawler.utils.NumberToDrawable;
 
 /**
  * create an instance of this fragment.
@@ -22,13 +24,10 @@ public class HomeFragment extends Fragment {
 
     private TabLayout mTabLayout;//选项卡
     private ViewPager mViewPager;//选项切换页
+    private HomeContentView mHomeContentView;//首页内容视图
+    private FloatingActionButton fab_snackbar_tip;//浮动按钮
 
     private View view ;//fragment_home View对象
-    private boolean flag = false;//ListView是否已经加载完成
-    HomeContentView mHomeContentView;
-
-
-
 
     /**
      * 分页适配器
@@ -38,7 +37,8 @@ public class HomeFragment extends Fragment {
         String[] titles = new String[]
                 {"虎嗅-说正经","虎嗅-弄创潮","虎嗅-早晚见","虎嗅-耍腔调","推酷-SEO","推酷-交互设置","推酷-创业", "推酷-O2O", "推酷-软件构架", "推酷-产品设计"};
 
-        String[] urls = new String[]{
+        //获取数据的url
+        String[] xh_urls = new String[]{
                 "http://www.huxiu.com/business.html",
                 "http://www.huxiu.com/startups.html",
                 "http://www.huxiu.com/brief.html",
@@ -49,6 +49,18 @@ public class HomeFragment extends Fragment {
                 "http://www.tuicool.com/topics/10050185",
                 "http://www.tuicool.com/topics/11000148",
                 "http://www.tuicool.com/topics/10500004"
+        };
+        String[] urls = new String[]{
+                "http://www.huxiu.com/v2_action/article_list?huxiu_hash_code=b40645f27fce6ac837ba7837db8e63ad&catid=1&page=2",
+                "http://www.huxiu.com/v2_action/article_list?huxiu_hash_code=b40645f27fce6ac837ba7837db8e63ad&catid=2&page=2",
+                "http://www.huxiu.com/v2_action/article_list?huxiu_hash_code=b40645f27fce6ac837ba7837db8e63ad&catid=3&page=2",
+                "http://www.huxiu.com/v2_action/article_list?huxiu_hash_code=b40645f27fce6ac837ba7837db8e63ad&catid=4&page=2",
+                "http://www.tuicool.com/topics/10450014?st=0&lang=1&pn=1",
+                "http://www.tuicool.com/topics/10500001?st=0&lang=1&pn=1",
+                "http://www.tuicool.com/topics/10000024?st=0&lang=1&pn=1",
+                "http://www.tuicool.com/topics/10050185?st=0&lang=1&pn=1",
+                "http://www.tuicool.com/topics/11000148?st=0&lang=1&pn=1",
+                "http://www.tuicool.com/topics/10500004?st=0&lang=1&pn=1"
         };
         String[] tips = new String[]{
                 "明星公司、人物与产业趋势",
@@ -63,13 +75,13 @@ public class HomeFragment extends Fragment {
                 "http://www.tuicool.com/topics/10500004"
         };
         int category = 0;//0表示虎嗅、1表示推酷
+
+
+
         //开始调用显示页面
         @Override
         public void startUpdate(ViewGroup container) {
             super.startUpdate(container);
-            if(flag){
-               // mPullRefreshListViews.get(position).doDataTask();
-            }
         }
 
         //设置当前位置上的ViewPager的标题
@@ -94,9 +106,8 @@ public class HomeFragment extends Fragment {
             }else{
                 category=1;
             }
-            LinearLayout linearLayout = mHomeContentView.getView(v, getActivity(), urls[position], tips[position], category);
-            new DoExecuteAsyncTask().execute();
-            flag = true;
+            LinearLayout linearLayout = mHomeContentView.getView(v,fab_snackbar_tip, getActivity(), urls[position],xh_urls[position],tips[position], category);
+            mHomeContentView.doDataTask();
             ((ViewPager) container).addView(linearLayout);
             return linearLayout;
         }
@@ -114,21 +125,6 @@ public class HomeFragment extends Fragment {
         }
     };
 
-    /**
-     * 异步执行任务
-     */
-    private class DoExecuteAsyncTask extends AsyncTask<Void, Void, Void>{
-        @Override
-        protected Void doInBackground(Void... params) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            mHomeContentView.doDataTask();
-        }
-    }
 
 
     @Override
@@ -136,6 +132,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_home, container, false);
+        fab_snackbar_tip = (FloatingActionButton) view.findViewById(R.id.fab_snackbar_tip);
         mTabLayout = (TabLayout) view.findViewById(R.id.tl_home_tabs);
         mViewPager = (ViewPager) view.findViewById(R.id.vp_home_viewpager);
 

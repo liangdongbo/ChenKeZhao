@@ -28,4 +28,6 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.3'/*HTML解析*/
     compile 'com.mcxiaoke.volley:library:1.0.19'/*google官方，网络框架*/
     compile 'com.android.support:design:23.1.1'/*android design support library Google推出的重要设计*/
+    compile 'com.makeramen:roundedimageview:2.2.1'/*图片圆角转换*/
+    //compile 'com.google.code.gson:gson:2.5'
 }

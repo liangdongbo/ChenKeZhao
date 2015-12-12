@@ -3,9 +3,8 @@ package com.ckz.crawler.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
+import android.util.JsonReader;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,15 +28,20 @@ import com.ckz.crawler.R;
 import com.ckz.crawler.entity.Article;
 import com.ckz.crawler.network.MyStringRequest;
 import com.ckz.crawler.ui.activity.SpiderContentShowActivity;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.logging.LogRecord;
+import java.util.Map;
 
 /**
- * Created by win7 on 2015/11/17.
+ * Created by ckz on 2015/11/17.
+ * 陈科肇
  */
 public class SpiderUtils{
     private List<Article> articles;//文章对象集合
@@ -47,15 +51,21 @@ public class SpiderUtils{
     private  ImageView iv_loading;
     private String content_html = "";
 
-    public String getCcontext(){
+    public String getContent(){
         return content_html;
     }
+
+
+
     /**
-     * 发送请求，显示数据块
+     * 下拉-发送请求，获取数据块
+     * @param v R.layout.content_view
+     * @param url 爬取网址
      * @param mPullRefreshListView 下拉的View对象控件
      * @param context 上下文
+     * @param category 爬取文章类别
      */
-    public void getSpiderItem(View v,String url,final PullToRefreshListView mPullRefreshListView, final Context context, final int category){
+    public void getPullData(View v,final String url,final PullToRefreshListView mPullRefreshListView, final Context context, final int category){
 
         if(mVolleyQueue==null){
             mVolleyQueue = Volley.newRequestQueue(context);//请求队列
@@ -64,6 +74,7 @@ public class SpiderUtils{
         this.res = context.getResources();
         iv_loading = (ImageView) v.findViewById(R.id.loading);
         iv_loading.setVisibility(View.VISIBLE);
+
         //使用volley发送StringRequest请求--------------------开始
         MyStringRequest stringRequest = new MyStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -72,6 +83,15 @@ public class SpiderUtils{
                 String html = new String(b);
                 //System.out.println(html);
                 if(category==0){//HuXiu
+                    if(url.indexOf("page=")!=-1){
+                        try {
+                            Gson gson = new Gson();
+                            Map<String,String> map= gson.fromJson(html,new TypeToken<Map<String,String>>() {}.getType());
+                            html = map.get("data");
+                        }catch (JsonSyntaxException ex){
+                            throw new JsonSyntaxException(ex);
+                        }
+                    }
                     articles = new HtmlParse().getHuXiuList(html);
                 }else{//Tuicool
                     articles = new HtmlParse().getTuicoolList(html);
@@ -100,14 +120,14 @@ public class SpiderUtils{
         },new Response.ErrorListener(){//请求失败
             @Override
             public void onErrorResponse(VolleyError error) {
-                    /*
-                    TimeoutError -- ConnectionTimeout or SocketTimeout
-                    AuthFailureError -- 401 ( UNAUTHORIZED ) && 403 ( FORBIDDEN )
-                    ServerError -- 5xx
-                    ClientError -- 4xx(Created in this demo for handling all 4xx error which are treated as Client side errors)
-                    NetworkError -- No network found
-                    ParseError -- Error while converting HTTP Response to JSONObject.
-                    */
+                /*
+                TimeoutError -- ConnectionTimeout or SocketTimeout
+                AuthFailureError -- 401 ( UNAUTHORIZED ) && 403 ( FORBIDDEN )
+                ServerError -- 5xx
+                ClientError -- 4xx(Created in this demo for handling all 4xx error which are treated as Client side errors)
+                NetworkError -- No network found
+                ParseError -- Error while converting HTTP Response to JSONObject.
+                */
                 String message = "未定义";
                 if( error instanceof NetworkError) {
                     message="网络链接异常，请检查网络配置";

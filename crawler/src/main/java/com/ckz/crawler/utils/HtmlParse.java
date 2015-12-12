@@ -27,6 +27,8 @@ public class HtmlParse {
         Elements items =  doc.select("div[class=mod-b mod-art]");          //获取全部模块内容元素
         for(Element item:items){
             //获取每一个模块
+            //id
+            String id = item.attr("data-aid");
             //标题
             Element title = item.getElementsByClass("mob-ctt").first();
             Element h3 = title.getElementsByTag("h3").first();   //推荐内容标题元素
@@ -40,7 +42,7 @@ public class HtmlParse {
 
             //快照内容
             Element content  = title.getElementsByClass("mob-sub").first();
-            results.add(new Article(a.text(),href,content.text(),cover,time.text()));
+            results.add(new Article(id,a.text(),href,content.text(),cover,time.text()));
         }
         return results;
     }
@@ -60,6 +62,8 @@ public class HtmlParse {
             String href_str="";
             String content_str="";
             //获取每一个模块
+            //id
+            String id = item.attr("data-id");
             //标题
             Element a = item.getElementsByClass("article-list-title").first();
             if(a!=null){
@@ -83,7 +87,7 @@ public class HtmlParse {
             if(content!=null){
                 content_str=content.text();
             }
-            results.add(new Article(title_str,href_str,content_str,cover_path,time_str));
+            results.add(new Article(id,title_str,href_str,content_str,cover_path,time_str));
         }
         return results;
     }

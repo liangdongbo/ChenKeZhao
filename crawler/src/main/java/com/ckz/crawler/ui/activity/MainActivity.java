@@ -1,13 +1,8 @@
 package com.ckz.crawler.ui.activity;
 
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -28,8 +23,6 @@ import com.ckz.crawler.ui.fragment.HomeFragment;
 import com.ckz.crawler.ui.fragment.MyFragment;
 import com.ckz.crawler.ui.fragment.TopicFragment;
 import com.ckz.crawler.utils.ShareUtils;
-
-import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity implements FindFragment.OnFragmentInteractionListener,NavigationView.OnNavigationItemSelectedListener{

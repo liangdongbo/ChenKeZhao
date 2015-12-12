@@ -32,7 +32,7 @@ public class SpiderContentShowActivity extends Activity {
             switch (msg.what){
                 case LOAD_SUCCEED :
                     //显示html数据
-                    String spider_html = su.getCcontext();
+                    String spider_html = su.getContent();
                     if(spider_html.trim().length()==0||spider_html==null){
                         spider_html="找不到内容...";
                     }

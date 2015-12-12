@@ -5,18 +5,28 @@ package com.ckz.crawler.entity;
  * 文章信息
  */
 public class Article {
+    private String id;//文章ID
     private String title;//标题
     private String href;//标题链接
     private String snapshoot;//内容快照
     private String cover;//封面
     private String time;//发布时间
 
-    public Article(String title, String href, String snapshoot, String cover, String time) {
+    public Article(String id, String title, String href, String snapshoot, String cover, String time) {
+        this.id = id;
         this.title = title;
         this.href = href;
         this.snapshoot = snapshoot;
         this.cover = cover;
         this.time = time;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
