@@ -1,6 +1,5 @@
 package com.ckz.crawler.ui.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -11,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.ckz.crawler.R;
 import com.ckz.crawler.ui.view.HomeContentView;
-import com.ckz.crawler.utils.NumberToDrawable;
 
 /**
  * create an instance of this fragment.
@@ -28,6 +27,7 @@ public class HomeFragment extends Fragment {
     private FloatingActionButton fab_snackbar_tip;//浮动按钮
 
     private View view ;//fragment_home View对象
+
 
     /**
      * 分页适配器
@@ -100,6 +100,7 @@ public class HomeFragment extends Fragment {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             View v = LayoutInflater.from(getActivity()).inflate(R.layout.content_view, null);
+            fab_snackbar_tip = (FloatingActionButton) v.findViewById(R.id.fab_snackbar_tip);
             mHomeContentView = new HomeContentView();
             if(position<4){
                 category=0;
@@ -132,7 +133,6 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view= inflater.inflate(R.layout.fragment_home, container, false);
-        fab_snackbar_tip = (FloatingActionButton) view.findViewById(R.id.fab_snackbar_tip);
         mTabLayout = (TabLayout) view.findViewById(R.id.tl_home_tabs);
         mViewPager = (ViewPager) view.findViewById(R.id.vp_home_viewpager);
 

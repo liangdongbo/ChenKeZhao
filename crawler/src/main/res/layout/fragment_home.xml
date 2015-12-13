@@ -11,8 +11,8 @@
         android:id="@+id/tl_home_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabIndicatorColor="#FF00FF00"
-        app:tabSelectedTextColor="#FF00FF00"
+        app:tabIndicatorColor="#00820d"
+        app:tabSelectedTextColor="#009100"
         app:tabGravity="center"
         app:tabMode="scrollable"
         app:tabTextColor="#FF000000"/>
@@ -23,13 +23,4 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tl_home_tabs"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-    <!--浮动按钮-->
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_snackbar_tip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="30dp"
-        app:backgroundTint="#470c6a35"/>
 </RelativeLayout>
