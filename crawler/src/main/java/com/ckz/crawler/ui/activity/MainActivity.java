@@ -1,9 +1,14 @@
 package com.ckz.crawler.ui.activity;
 
+import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -11,11 +16,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.ckz.crawler.R;
 import com.ckz.crawler.ui.fragment.FindFragment;
@@ -24,9 +32,20 @@ import com.ckz.crawler.ui.fragment.MyFragment;
 import com.ckz.crawler.ui.fragment.TopicFragment;
 import com.ckz.crawler.utils.ShareUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.logging.SimpleFormatter;
+
 
 public class MainActivity extends AppCompatActivity implements FindFragment.OnFragmentInteractionListener,NavigationView.OnNavigationItemSelectedListener{
 
+    private static final int REQUEST_CODE_CAMERA = 1;
+    private static final String TAG = MainActivity.class.getSimpleName();
     //主页面按钮
     private LinearLayout btn_main_home;
     private LinearLayout btn_main_topic;
@@ -216,6 +235,8 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
 
         if (id == R.id.nav_camara) {
             // Handle the camera action
+            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+            startActivityForResult(intent, REQUEST_CODE_CAMERA);
 
         } else if (id == R.id.nav_gallery) {
 
@@ -235,5 +256,59 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
         //关闭抽屉
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            String sdStatus = Environment.getExternalStorageState();
+            if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+                Log.i("TestFile",
+                        "SD card is not avaiable/writeable right now.");
+                return;
+            }
+            String name = new DateFormat().format("yyyyMMdd_hhmmss",Calendar.getInstance(Locale.CHINA)) + ".jpg";
+            Bundle bundle = data.getExtras();
+            Bitmap bitmap = (Bitmap) bundle.get("data");// 获取相机返回的数据，并转换为Bitmap图片格式
+
+            FileOutputStream b = null;
+
+            String path = Environment.getExternalStorageDirectory().getPath()+"/chenkezhao/";
+            File file=new File(path);
+            if(!file.exists()){
+                file.mkdir();
+            }
+            File f = new File(file,name);
+            try {
+                b = new FileOutputStream(f);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    b.flush();
+                    b.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            //广播，通知图库刷新指定图片
+            Uri localUri = Uri.fromFile(f);
+            Intent localIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, localUri);
+            sendBroadcast(localIntent);
+
+            //提示消息
+            final Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(R.id.main_view), "照片保存成功", Snackbar.LENGTH_LONG);
+            snackbar.setAction("关闭", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                }
+            });
+            snackbar.show();
+
+        }
     }
 }
