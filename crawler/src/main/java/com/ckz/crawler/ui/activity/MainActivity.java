@@ -233,24 +233,24 @@ public class MainActivity extends AppCompatActivity implements FindFragment.OnFr
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
+        if (id == R.id.nav_camara) {//相机
             // Handle the camera action
             Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
             startActivityForResult(intent, REQUEST_CODE_CAMERA);
-
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_gallery) {//图库
+            Intent intent = new Intent(MainActivity.this,GalleryActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_slideshow) {//视频
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_share) {//分享
             //分享ImageView组件单张图片
           /*  View  v = View.inflate(this,R.layout.nav_header_main,null);
             ImageView siv = (ImageView) v.findViewById(R.id.imageView);
             shareUtils.shareImageViewModule(siv);*/
             shareUtils.shareMyInformation();
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_send) {//发送文字
             shareUtils.sendText("陈科肇\n18575612426@163.com");
         }
         //关闭抽屉
