@@ -21,7 +21,6 @@ import java.util.List;
  */
 public class GalleryActivity extends AppCompatActivity {
 
-    private List<String> mDatas;
     private GalleryStaggeredAdapter mGalleryStaggeredAdapter;
 
 
@@ -31,7 +30,6 @@ public class GalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
 
         initCurrentActionBar();
-        initData();
         //获取句柄
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rv_gallery_view);
 
@@ -43,7 +41,7 @@ public class GalleryActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,
                 StaggeredGridLayoutManager.VERTICAL));
         //设置adapter
-        mGalleryStaggeredAdapter =new GalleryStaggeredAdapter(GalleryActivity.this, mDatas);
+        mGalleryStaggeredAdapter =new GalleryStaggeredAdapter(GalleryActivity.this);
         mRecyclerView.setAdapter(mGalleryStaggeredAdapter);
         //设置Item动画
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -79,25 +77,16 @@ public class GalleryActivity extends AppCompatActivity {
         });
     }
 
-    protected void initData() {
-        mDatas = new ArrayList<String>();
-        for (int i = 'A'; i < 'z'; i++) {
-            mDatas.add("" + (char) i);
-        }
-    }
-
     private void initEvent() {
         mGalleryStaggeredAdapter.setOnItemClickLitener(new GalleryStaggeredAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(GalleryActivity.this,
-                        position + " click", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(GalleryActivity.this,position + " click", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
-                Toast.makeText(GalleryActivity.this,
-                        position + " long click", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(GalleryActivity.this,position + " long click", Toast.LENGTH_SHORT).show();
             }
         });
     }
